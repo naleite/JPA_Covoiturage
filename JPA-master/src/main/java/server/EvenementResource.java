@@ -80,18 +80,20 @@ public class EvenementResource implements MyService {
 		t.commit();
 		
 	}
-	
-	@GET
+
+    //@TODO Pas reussir ici, ni Get ni Post. Mais je crois post est plus logique.
+	@POST
 	@Path("propose/{id}-{depart}-{dest}")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public String proposeTrajet(@PathParam ("id") String id,@PathParam ("depart") String depart,@PathParam ("dest") String dest,
+	//@Produces({ MediaType.APPLICATION_JSON })
+	public Evenement proposeTrajet(@PathParam ("id") String id,@PathParam ("depart") String depart,@PathParam ("dest") String dest,
 			Date dateDeDepart) {
 		Query query=manager.createQuery("SELECT p FROM PERSONNE  AS p WHERE ID=id");
 		List result=query.getResultList();
 	
 		Personne personne = (Personne) result.get(0);
+        Evenement ev=personne.proposeTrajet(depart, dest, dateDeDepart);
 		manager.persist(personne.proposeTrajet(depart, dest, dateDeDepart));
-		return "OK";
+		return ev;
 	}
 	
 	@GET
