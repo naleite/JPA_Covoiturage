@@ -1,0 +1,40 @@
+<!doctype html><html lang="en" ng-app id="ng-app">
+    <head>    
+        <script src="bower_components/angular/angular.min.js"></script>
+        <script>
+        function PostsCtrlAjax($scope, $http)
+        {
+        //$http({method: 'GET', url: 'posts.json'}).success(function(data) 
+        		$http({method: 'DELETE', url: 'http://localhost:8080/rest/ev/delete/1'}).success(function(data){
+        $scope.posts = data;
+        });
+        }
+        </script>
+        <style>
+        body{font-family:arial; font-size:12px;padding:10px;}
+        .postBody{ width:550px; border-bottom:dashed 2px #dedede}
+        .postBody a{color:#333333;text-decoration:none}
+        .postBody a:hover{color:#006699;background-color:#dedede}
+        .time{margin:10px 0px 10px 0px; color:#006699; }
+        </style>
+    </head>
+    <body >
+      <!--   <h1>Parsing JSON with Angular JS Tutorial</h1>   
+            <div id="ng-app" ng-app ng-controller="PostsCtrlAjax">  
+            <div ng-repeat="post in posts" class='postBody'>
+            <h2><a href='{{post.url}}'>{{post.title}}</a></h2>
+            <div class='time'>{{post.time}} - {{post.author}} </div>
+            <p>{{post.description}}</p>
+            <img ng-src="{{post.banner}}" style='width:550px'/>
+            </div>
+            </div> --> 
+            <h1>Parsing Evenement</h1>   
+            <div id="ng-app" ng-app ng-controller="PostsCtrlAjax">  
+            <div ng-repeat="post in posts" class='postBody'>
+            <h2><a href='{{post.id}}'>{{post.id}}</a></h2>
+            <div class='time'>{{post.nom}} - {{post.nom}} </div>
+            <p>{{post.nom}}</p>
+            <img ng-src="{{post.banner}}" style='width:550px'/>
+            </div>
+            </div> 
+    </body></html>
