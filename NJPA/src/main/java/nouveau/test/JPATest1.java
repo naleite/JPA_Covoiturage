@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 public class JPATest1 {
 
     private EntityManager manager;
+    private static int exe=1;
 
     public void setManager(EntityManager manager) {
         this.manager = manager;
@@ -25,6 +26,13 @@ public class JPATest1 {
     }
 
 
+    public static void decExe(){
+        exe--;
+    }
+
+    public static int getExe(){
+        return exe;
+    }
     public static void main() {
 
         /*EntityManagerFactory factory = Persistence
