@@ -3,6 +3,8 @@ package nouveau.shared;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,13 +12,21 @@ import java.util.List;
  * Created by naleite on 14/12/11.
  */
 @Entity
-public class NPersonne {
+@XmlRootElement
+public class NPersonne implements Serializable {
 
     private long id;
     private String nom;
     private List<NEvenement> evenements=new ArrayList<NEvenement>();
     //private NVoiture myCar;
+    private List<NCommentaire> commentaires=new ArrayList<NCommentaire>();
 
+    public NPersonne(){
+        //JPA
+    }
+    public NPersonne(String nom){
+        this.nom=nom;
+    }
     @Id
     @GeneratedValue
     public long getId() {
@@ -46,6 +56,14 @@ public class NPersonne {
         this.evenements = evenements;
     }
 
+    @OneToMany(mappedBy = "reducteur")
+    public List<NCommentaire> getCommentaires() {
+        return commentaires;
+    }
+
+    public void setCommentaires(List<NCommentaire> commentaires) {
+        this.commentaires = commentaires;
+    }
 
 
     public NEvenement createTrajet(NVoiture myCar,String depart, String dest) {
@@ -94,4 +112,6 @@ public class NPersonne {
         }
         return s;
     }
+
+
 }

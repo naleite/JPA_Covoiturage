@@ -1,17 +1,28 @@
 package nouveau.shared;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by naleite on 14/12/11.
  */
 @Entity
-public class NVoiture {
+public class NVoiture implements Serializable {
 
     private long id;
     private NPersonne owner;
     private int nbPlaceTotal=4;
 
+    public NVoiture(){
+        //JPA
+    }
+    public NVoiture(NPersonne owner){
+        setOwner(owner);
+    }
+    public NVoiture(NPersonne owner,int nbPlaceTotal){
+        setOwner(owner);
+        setNbPlaceTotal(nbPlaceTotal);
+    }
     @Id
     @GeneratedValue
     public long getId() {

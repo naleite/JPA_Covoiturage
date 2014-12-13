@@ -1,6 +1,7 @@
 package nouveau.shared;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -10,17 +11,28 @@ import java.util.List;
  */
 
 @Entity
-public class NEvenement {
+public class NEvenement implements Serializable{
     private long id;
     private String villeDepart,villeDest;
     private List<NPersonne> participants=new ArrayList<NPersonne>();
     private NPersonne conducteur;
     private int nbPlaceReste;
     private NVoiture voiture;
+    private List<NCommentaire> commentaires=new ArrayList<NCommentaire>();
 
 
+    NEvenement(){
+        //JPA default
+    }
 
-
+    public NEvenement(NVoiture v,String depart,String dest){
+        this.voiture=v;
+        this.villeDepart=depart;
+        this.villeDest=dest;
+        this.conducteur=v.getOwner();
+        this.nbPlaceReste=v.getNbPlaceTotal();
+        addParticipant(conducteur);
+    }
 
     @Id
     @GeneratedValue
@@ -102,6 +114,15 @@ public class NEvenement {
         }
 
 
+    }
+
+    @OneToMany(mappedBy = "evenement")
+    public List<NCommentaire> getCommentaires() {
+        return commentaires;
+    }
+
+    public void setCommentaires(List<NCommentaire> commentaires) {
+        this.commentaires = commentaires;
     }
 
     protected boolean ValideCreation(){
