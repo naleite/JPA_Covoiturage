@@ -50,9 +50,9 @@ public class JPATest1 {
         try {
 
 
-            NPersonne p1 = new NPersonne("p111111");
-            NVoiture v1 = new NVoiture(p1,3);
 
+            NVoiture v1 = new NVoiture(3);
+            NPersonne p1 = new NPersonne("p1",v1);
             //p1.setMyCar(v1);
             //p1.setNom("p1");
             //v1.setOwner(p1);
@@ -73,7 +73,7 @@ public class JPATest1 {
             Logger.getGlobal().info(ev1.toString());
 
             NVoiture v2 = new NVoiture();
-            NPersonne p3 = new NPersonne();
+            NPersonne p3 = new NPersonne("p3",v2);
             v2.setNbPlaceTotal(4);
             v2.setOwner(p3);
             p3.setNom("p3");
@@ -90,7 +90,7 @@ public class JPATest1 {
             ev2.setVilleDest("Rennes");
             ev2.addParticipant(p2);
 
-            NEvenement ev3 = new NEvenement(v2,"Shanghai","Pekin");
+            NEvenement ev3 = new NEvenement(p3,"Shanghai","Pekin");
             ev3.addParticipant(p2);
             manager.persist(ev3);
             NCommentaire c1=new NCommentaire(p1,ev1,"nice");

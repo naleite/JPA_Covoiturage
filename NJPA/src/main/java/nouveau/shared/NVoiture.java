@@ -23,6 +23,9 @@ public class NVoiture implements Serializable {
         setOwner(owner);
         setNbPlaceTotal(nbPlaceTotal);
     }
+    public NVoiture(int nbPlaceTotal){
+        setNbPlaceTotal(nbPlaceTotal);
+    }
     @Id
     @GeneratedValue
     public long getId() {

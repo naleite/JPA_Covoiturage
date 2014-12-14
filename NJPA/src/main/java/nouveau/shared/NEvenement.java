@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Created by naleite on 14/12/11.
@@ -25,13 +26,19 @@ public class NEvenement implements Serializable{
         //JPA default
     }
 
-    public NEvenement(NVoiture v,String depart,String dest){
-        this.voiture=v;
-        this.villeDepart=depart;
-        this.villeDest=dest;
-        this.conducteur=v.getOwner();
-        this.nbPlaceReste=v.getNbPlaceTotal();
-        addParticipant(conducteur);
+    public NEvenement(NPersonne p,String depart,String dest){
+        this.voiture=p.getVoiture();
+        if(voiture!=null) {
+            this.villeDepart = depart;
+            this.villeDest = dest;
+            this.conducteur = p;
+            this.nbPlaceReste = p.getVoiture().getNbPlaceTotal();
+            addParticipant(conducteur);
+        }
+        else{
+            throw new NoSuchElementException("Voiture is null");
+        }
+
     }
 
     @Id
@@ -87,7 +94,7 @@ public class NEvenement implements Serializable{
 
     public void setVoiture(NVoiture voiture) {
         this.voiture = voiture;
-        setConducteur(voiture.getOwner());
+        //setConducteur(voiture.getOwner());
 
     }
 

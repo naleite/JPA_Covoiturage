@@ -18,7 +18,7 @@ public class NPersonne implements Serializable {
     private long id;
     private String nom;
     private List<NEvenement> evenements=new ArrayList<NEvenement>();
-    //private NVoiture myCar;
+    private NVoiture voiture;
     private List<NCommentaire> commentaires=new ArrayList<NCommentaire>();
 
     public NPersonne(){
@@ -26,6 +26,11 @@ public class NPersonne implements Serializable {
     }
     public NPersonne(String nom){
         this.nom=nom;
+    }
+    public NPersonne(String nom,NVoiture voiture){
+        this.nom=nom;
+        setVoiture(voiture);
+
     }
     @Id
     @GeneratedValue
@@ -56,6 +61,16 @@ public class NPersonne implements Serializable {
         this.evenements = evenements;
     }
 
+    @OneToOne
+    public NVoiture getVoiture() {
+        return voiture;
+    }
+
+    public void setVoiture(NVoiture voiture) {
+        this.voiture = voiture;
+
+    }
+
     @OneToMany(mappedBy = "reducteur")
     public List<NCommentaire> getCommentaires() {
         return commentaires;
@@ -74,14 +89,15 @@ public class NPersonne implements Serializable {
         evenement.setVilleDepart(depart);
         evenement.setVilleDest(dest);
         evenement.addParticipant(this);
-        if(evenement.ValideCreation()){
+        /*if(evenement.ValideCreation()){
             return evenement;
         }
         else{
             System.err.println("evenment pas valide");
             return null;
-        }
+        }*/
 
+        return evenement;
     }
     public void ajouteMoi(NEvenement ev){
         if(!ev.getParticipants().contains(this)) {

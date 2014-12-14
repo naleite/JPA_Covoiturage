@@ -15,5 +15,15 @@ public interface NService {
 
      // public List<NEvenement> evenementsOnePerson(String nom);
     public List<NPersonne> allPersonne() ;
-    public List<NEvenement> evenementsOnePerson(@PathParam("id")long id);
+
+    public List<NEvenement> evenementsOnePerson(long id);
+
+    public void ajoutePersonne(String nom);
+
+    public void createEve(long id,
+                          String depart,
+                          String dest);
+
+
+    public void deleteEvById(long id);
 }
