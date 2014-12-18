@@ -25,5 +25,5 @@ public interface NService {
                           String dest);
 
 
-    public void deleteEvById(long id);
+    public String deleteEvById(long id);
 }

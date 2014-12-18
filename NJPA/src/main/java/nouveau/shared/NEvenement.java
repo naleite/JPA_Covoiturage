@@ -1,6 +1,7 @@
 package nouveau.shared;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,6 +13,7 @@ import java.util.NoSuchElementException;
  */
 
 @Entity
+@XmlRootElement
 public class NEvenement implements Serializable{
     private long id;
     private String villeDepart,villeDest;
@@ -113,7 +115,6 @@ public class NEvenement implements Serializable{
 
             boolean b = participants.add(p);
             nbPlaceReste--;
-            p.addEvenement(this);
             return b;
         }
         else{
@@ -132,6 +133,7 @@ public class NEvenement implements Serializable{
         this.commentaires = commentaires;
     }
 
+
     protected boolean ValideCreation(){
         if(this.voiture!=null && this.conducteur==voiture.getOwner()
                 && this.nbPlaceReste==this.voiture.getNbPlaceTotal()-1
@@ -143,6 +145,7 @@ public class NEvenement implements Serializable{
         }
     }
 
+    @SuppressWarnings("unchecked")
     public boolean removePersonne(NPersonne p){
         if(participants.contains(p) ) {
             if( p!=conducteur) {
@@ -165,6 +168,41 @@ public class NEvenement implements Serializable{
         }
     }
 
+    public void removePersonneSimple(NPersonne p){
+        if(participants.contains(p) && !getConducteur().equals(p)) {
+            participants.remove(p);
+            nbPlaceReste++;
+        }
+        else if((participants.contains(p) && getConducteur().equals(p))) {
+            participants.remove(p);
+            nbPlaceReste++;
+            setConducteur(null);
+            setVoiture(null);
+            //setNbPlaceReste(0);
+        }
+    }
+
+    public void removeCommentaire(NCommentaire c){
+        commentaires.remove(c);
+    }
+
+
+    @PreRemove
+    public void onPreremove(){
+
+            for(NPersonne p: this.participants){
+                p.removeEvenement(this);
+            }
+            this.commentaires.clear();
+            this.participants.clear();
+    }
+
+    public void addCommentaire(NCommentaire c){
+        commentaires.add(c);
+    }
+
+
+
     @Override
     public String toString(){
         String s1="conducteur:"+getConducteur().getNom()+".De "+getVilleDepart()+" a "+getVilleDest()+",reste "+nbPlaceReste+" Places, particips:\n";
@@ -174,4 +212,6 @@ public class NEvenement implements Serializable{
         }
         return s1;
     }
+
+
 }

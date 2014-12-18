@@ -68,7 +68,7 @@ public class JPATest1 {
 
 
             NEvenement ev1 = p1.createTrajet(v1, "Rennes", "paris");
-            p2.ajouteMoi(ev1);
+            p2.addEvenement(ev1);
             manager.persist(ev1);
             Logger.getGlobal().info(ev1.toString());
 
@@ -99,13 +99,22 @@ public class JPATest1 {
             manager.persist(c1);
             manager.persist(c2);
             manager.persist(c3);
+            ev2.addCommentaire(c1);
+            ev2.addCommentaire(c2);
+            ev2.addCommentaire(c3);
             Logger.getGlobal().info(ev2.toString());
             manager.persist(ev2);
+
 
             Logger.getGlobal().info(p1.toString());
 
             Logger.getGlobal().info(ev3.toString());
 
+
+            NPersonne p4=new NPersonne("p4");
+            manager.persist(p4);
+            //test remove personne
+            //manager.remove(p2);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,6 +1,6 @@
 package nouveau.server;
 
-import com.sun.jersey.core.spi.factory.ResponseImpl;
+import nouveau.shared.NCommentaire;
 import nouveau.shared.NEvenement;
 import nouveau.shared.NPersonne;
 import nouveau.shared.NVoiture;
@@ -11,8 +11,6 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.File;
 import java.util.List;
 
 /**
@@ -44,6 +42,15 @@ public class NResourceImpl implements NService {
     }
 
     @GET
+    @Produces({ MediaType.APPLICATION_JSON })
+    @Path("ev/{iden}")
+    public NEvenement evenementById(@PathParam("iden") long id) {
+        Query query=em.createQuery("select evens from NEvenement evens where evens.id=:iden").setParameter("iden",id);
+        NEvenement res=(NEvenement) query.getSingleResult();
+        return res;
+    }
+
+    @GET
     @Path("per")
     @Produces({ MediaType.APPLICATION_JSON })
     public List<NPersonne> allPersonne() {
@@ -54,7 +61,7 @@ public class NResourceImpl implements NService {
 
 
     @GET
-    @Path("/per/{iden}")
+    @Path("/per/{iden}/ev") //lister tous les trajets de la personne de id=iden.
     @Produces({ MediaType.APPLICATION_JSON })
     public List<NEvenement> evenementsOnePerson(@PathParam("iden")long id) {
         Query query=em.createQuery("select p.evenements from NPersonne as p where p.id=:iden").setParameter("iden",id);
@@ -78,6 +85,28 @@ public class NResourceImpl implements NService {
 
     }
 
+    @POST
+    @Consumes("application/json")
+    @Path("/ev/{eid}-{pid}/")
+    public void addPertoEvenement(@PathParam("eid")long eid,@PathParam("pid") long pid){
+        EntityTransaction tx=em.getTransaction();
+        try {
+            tx.begin();
+
+            Query queryP = em.createQuery("select p from NPersonne p where p.id=:pid").setParameter("pid",pid);
+            NPersonne p = (NPersonne) queryP.getSingleResult();
+            Query queryE = em.createQuery("select e from NEvenement e where e.id=:eid").setParameter("eid",eid);
+            NEvenement e = (NEvenement) queryE.getSingleResult();
+            p.addEvenement(e);
+        }
+        catch (Exception e){}
+        finally {
+            tx.commit();
+        }
+
+
+    }
+
     @POST @Consumes("application/json")
     @Path("per/{id}-{depart}-{dest}")
     public void createEve(@PathParam("id")long id,
@@ -89,41 +118,103 @@ public class NResourceImpl implements NService {
         Query query1=em.createQuery("select v from NVoiture as v where v.owner=id");
         NVoiture v= (NVoiture) query1.getSingleResult();
         //System.out.println(query1.getResultList().size());
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
         if(v!=null) {
-            EntityTransaction tx = em.getTransaction();
-            tx.begin();
+
+
             NEvenement newEv=p.createTrajet(v, depart, dest);
             em.persist(newEv);
-            tx.commit();
+
 
         }
         else{
-            //TODO
-        }
 
+            NEvenement newEvnoV=new NEvenement(p,depart,dest);
+            em.persist(newEvnoV);
+        }
+        tx.commit();
+
+    }
+
+
+    @POST
+    @Path("/ev/{eid}/per/{pid}")
+    @Produces("text/plain")
+    public String removeParticipant(@PathParam("pid") long pid, @PathParam("eid") long eid){
+        Query queryP=em.createQuery("select p from NPersonne p where p.id=:pid").setParameter("pid",pid);
+        Query queryE=em.createQuery("select e from NEvenement e where e.id=:eid").setParameter("eid",eid);
+        NPersonne p=(NPersonne)queryP.getSingleResult();
+        NEvenement e= (NEvenement) queryE.getSingleResult();
+        EntityTransaction tx=em.getTransaction();
+        try {
+            tx.begin();
+
+            if (e.getParticipants().contains(p) && !e.getConducteur().equals(p)) {
+                e.removePersonneSimple(p);
+                p.removeEvenement(e);
+                return "ok";
+            }
+
+            else if((e.getParticipants().contains(p) && e.getConducteur().equals(p))) {
+                e.removePersonneSimple(p);
+                p.removeEvenement(e);
+                e.setConducteur(null);
+                e.setVoiture(null);
+                tx.commit();
+                return "ok";
+            }
+
+            else {
+                return "nok";
+            }
+
+        }
+        catch (Exception ex){return "nok";}
+        finally {
+            tx.commit();
+        }
     }
 
     @DELETE
     @Path("/ev/{id}")
-    public void deleteEvById(@PathParam("id")long id){
+    @Produces("text/plain")
+    public String deleteEvById(@PathParam("id") long id){
 
         Query query=em.createQuery("select ev from NEvenement as ev where ev.id=:iden").setParameter("iden",id);
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            em.remove(query.getSingleResult());
+            //NEvenement ev=em.find(NEvenement.class,id);
+            NEvenement ev=(NEvenement)query.getSingleResult();
+
+            for(NPersonne p:ev.getParticipants()){
+
+                p.removeEvenement(ev);
+
+            }
+            ev.getParticipants().clear();
+            for(NCommentaire c:ev.getCommentaires()){
+                c.setEvenement(null);
+            }
+            ev.getCommentaires().clear();
+            em.remove(ev);
+
+            return "ok";
         }
-        catch (Exception e){}
+        catch (Exception e){return "nok";}
         finally {
             tx.commit();
         }
+
 
     }
 
 
     @DELETE
     @Path("/per/{id}")
-    public void deletePersonById(@PathParam("id")long id){
+    @Produces("text/plain")
+    public String deletePersonById(@PathParam("id")long id){
 
         Query query=em.createQuery("select p from NPersonne as p where p.id=:iden").setParameter("iden",id);
 
@@ -133,19 +224,91 @@ public class NResourceImpl implements NService {
             NPersonne p=(NPersonne) query.getSingleResult();
 
             for(NEvenement ev:p.getEvenements()){
-                p.removeEvenement(ev);
+                ev.removePersonne(p);
             }
 
+            for(NCommentaire c:p.getCommentaires()){
+                c.setReducteur(null);
+            }
+            p.getEvenements().clear();
+            p.getCommentaires().clear();
 
-            em.remove(query.getSingleResult());
+            em.remove(p);
+
+            return "ok";
         }
-        catch (Exception e){}
+        catch (Exception e){return "nok";}
         finally {
             tx.commit();
         }
 
     }
 
+
+    @GET
+    @Produces("application/json")
+    @Path("/com/")
+    public List<NCommentaire> allCommentaire(){
+        //Query q=em.createNamedQuery("select e from NEvenement e where e.id=:eid").setParameter("eid",eid);
+        Query query=em.createQuery("select comm from NCommentaire as comm");
+        List<NCommentaire> res=query.getResultList();
+        return res;
+    }
+
+    @GET
+    @Produces("application/json")
+    @Path("/ev/{eid}/com")
+    public List<NCommentaire> getCommentaireByEvent(@PathParam("eid")long eid){
+        //em.clear();
+        Query q=em.createQuery("select even.commentaires from NEvenement as even where even.id=:eid").setParameter("eid",eid);
+
+        //NEvenement ev=(NEvenement) q.getSingleResult();
+
+
+        List<NCommentaire> res=q.getResultList();
+        return res;
+    }
+
+    @GET
+    @Produces("application/json")
+    @Path("/per/{pid}/com")
+    public List<NCommentaire> getCommentaireByPer(@PathParam("pid")long pid){
+        //em.clear();
+        Query q=em.createQuery("select per.commentaires from NPersonne as per where per.id=:pid").setParameter("pid",pid);
+
+        //NEvenement ev=(NEvenement) q.getSingleResult();
+
+
+        List<NCommentaire> res=q.getResultList();
+        return res;
+    }
+
+    @POST
+    @Path("/com/{pid}-{eid}")
+    @Produces("text/plain")
+    public String addCommentaire(@PathParam("eid") long eid,@PathParam("pid") long pid, @FormParam("cmt") String cmt){
+        Query queryP=em.createQuery("select p from NPersonne p where p.id=:pid").setParameter("pid",pid);
+        Query queryE=em.createQuery("select e from NEvenement e where e.id=:eid").setParameter("eid",eid);
+        NPersonne p=(NPersonne)queryP.getSingleResult();
+        NEvenement e= (NEvenement) queryE.getSingleResult();
+        EntityTransaction tx=em.getTransaction();
+
+        try{
+            tx.begin();
+            NCommentaire commentaire=new NCommentaire();
+            commentaire.setEvenement(e);
+            commentaire.setContent(cmt);
+            commentaire.setReducteur(p);
+            em.persist(commentaire);
+            return "ok";
+
+        }
+        catch (Exception ex){return "nok";}
+        finally {
+            tx.commit();
+        }
+
+    }
 
 
 }

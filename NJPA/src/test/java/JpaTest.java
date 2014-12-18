@@ -45,7 +45,7 @@ public class JpaTest {
             manager.persist(p2);
 
             NEvenement ev1=p1.createTrajet("Rennes", "paris");
-            p2.ajouteMoi(ev1);
+            p2.addEvenement(ev1);
             manager.persist(ev1);
             Logger.getGlobal().info(ev1.toString());
 

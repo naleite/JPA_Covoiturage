@@ -1,22 +1,23 @@
 package nouveau.shared;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 /**
  * Created by naleite on 14/12/11.
  */
 @Entity
+@XmlRootElement
 public class NCommentaire implements Serializable {
     private long id;
     private NPersonne reducteur;
     private NEvenement evenement;
     private String content;
 
-    NCommentaire(){
+    public NCommentaire(){
     //JPA default
     }
 
@@ -24,6 +25,7 @@ public class NCommentaire implements Serializable {
         this.content=content;
         this.evenement=evenement;
         this.reducteur=reducteur;
+
     }
 
     @Id
@@ -37,6 +39,7 @@ public class NCommentaire implements Serializable {
     }
 
     @ManyToOne
+    @JsonIgnore
     public NPersonne getReducteur() {
         return reducteur;
     }
@@ -45,7 +48,8 @@ public class NCommentaire implements Serializable {
         this.reducteur = reducteur;
     }
 
-    @ManyToOne
+    @ManyToOne()
+    @JsonIgnore
     public NEvenement getEvenement() {
         return evenement;
     }

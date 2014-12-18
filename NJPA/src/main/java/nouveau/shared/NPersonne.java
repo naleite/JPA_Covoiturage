@@ -51,7 +51,7 @@ public class NPersonne implements Serializable {
         this.nom = nom;
     }
 
-    @ManyToMany(mappedBy = "participants")
+    @ManyToMany(mappedBy = "participants",cascade = CascadeType.PERSIST)
     @JsonIgnore
     public List<NEvenement> getEvenements() {
         return evenements;
@@ -61,7 +61,9 @@ public class NPersonne implements Serializable {
         this.evenements = evenements;
     }
 
-    @OneToOne
+
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JsonIgnore
     public NVoiture getVoiture() {
         return voiture;
     }
@@ -72,6 +74,7 @@ public class NPersonne implements Serializable {
     }
 
     @OneToMany(mappedBy = "reducteur")
+    @JsonIgnore
     public List<NCommentaire> getCommentaires() {
         return commentaires;
     }
@@ -89,36 +92,26 @@ public class NPersonne implements Serializable {
         evenement.setVilleDepart(depart);
         evenement.setVilleDest(dest);
         evenement.addParticipant(this);
-        /*if(evenement.ValideCreation()){
-            return evenement;
-        }
-        else{
-            System.err.println("evenment pas valide");
-            return null;
-        }*/
 
         return evenement;
     }
-    public void ajouteMoi(NEvenement ev){
+    public void addEvenement(NEvenement ev){
         if(!ev.getParticipants().contains(this)) {
             ev.addParticipant(this);
+            evenements.add(ev);
         }
     }
 
-    public void addEvenement(NEvenement ev){
-        evenements.add(ev);
 
-    }
-
-    public boolean removeEvenement(NEvenement ev){
+    public void removeEvenement(NEvenement ev){
 
         if(evenements.contains(ev)) {
             evenements.remove(ev);
-            return true;
         }
-        else{
-            return false;
-        }
+    }
+
+    public void addCommentaire(NCommentaire c){
+        commentaires.add(c);
     }
 
     public String toString(){
@@ -128,6 +121,7 @@ public class NPersonne implements Serializable {
         }
         return s;
     }
+
 
 
 }

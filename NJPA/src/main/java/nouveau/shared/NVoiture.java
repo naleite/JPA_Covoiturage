@@ -1,12 +1,14 @@
 package nouveau.shared;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 /**
  * Created by naleite on 14/12/11.
  */
 @Entity
+@XmlRootElement
 public class NVoiture implements Serializable {
 
     private long id;
