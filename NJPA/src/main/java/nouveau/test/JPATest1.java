@@ -34,6 +34,8 @@ public class JPATest1 {
     public static int getExe(){
         return exe;
     }
+
+    @SuppressWarnings("all")
     public static void main() {
 
         /*EntityManagerFactory factory = Persistence
@@ -202,8 +204,83 @@ public class JPATest1 {
         }
 */
     }
+    public static void test(EntityManager manager){
+
+        manager.clear();
+        EntityTransaction t = manager.getTransaction();
+        try {
+
+
+            t.begin();
+
+            NVoiture v1 = new NVoiture(3);
+            NPersonne p1 = new NPersonne();
+            p1.setVoiture(v1);
+            p1.setNom("p1");
+            v1.setOwner(p1);
+
+
+            manager.persist(p1);
+            manager.persist(v1);
+
+
+            NPersonne p2 = new NPersonne();
+            p2.setNom("p2");
+            manager.persist(p2);
+
+
+            NEvenement ev1 = p1.createTrajet(v1, "Rennes", "paris");
+            ev1.addParticipant(p2);
+            manager.persist(ev1);
+            Logger.getGlobal().info(ev1.toString());
+
+            NVoiture v2 = new NVoiture();
+            NPersonne p3 = new NPersonne("p3", v2);
+            v2.setNbPlaceTotal(4);
+            v2.setOwner(p3);
+            p3.setNom("p3");
+            //p3.setMyCar(v2);
+            p3.setVoiture(v2);
+            manager.persist(v2);
+            manager.persist(p3);
+
+            //NEvenement ev2=new NEvenement();
+            NEvenement ev2 = p3.createTrajet(v2, "Paris", "Rennes");
+            ev2.setVoiture(v2);
+            ev2.setConducteur(p3);
+            ev2.addParticipant(p1);
+            ev2.setVilleDepart("Paris");
+            ev2.setVilleDest("Rennes");
+            ev2.addParticipant(p2);
+
+            manager.persist(ev2);
+            NEvenement ev3 = new NEvenement(p3, "Shanghai", "Pekin"); //p3*, p2
+            ev3.addParticipant(p2);
+            manager.persist(ev3);
+            NCommentaire c1 = new NCommentaire(p1, ev1, "nice");
+            NCommentaire c2 = new NCommentaire(p3, ev2, "nice2");
+            NCommentaire c3 = new NCommentaire(p2, ev3, "nice3");
+            manager.persist(c1);
+            manager.persist(c2);
+            manager.persist(c3);
+            ev1.addCommentaire(c1);
+            ev2.addCommentaire(c2);
+            ev3.addCommentaire(c3);
+            Logger.getGlobal().info(ev2.toString());
+            //manager.refresh(ev2);
+            manager.flush();
+            System.out.println("test1 method called");
+        }
+        catch(Exception e){}
+
+        finally {
+            t.commit();
+        }
+
+    }
 
     public static void main(String[] args){
-        main();
+        //main();
+        throw new IllegalStateException("You can't execute this class directely.");
     }
 }

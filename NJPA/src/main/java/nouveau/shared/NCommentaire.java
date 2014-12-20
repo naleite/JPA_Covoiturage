@@ -22,9 +22,9 @@ public class NCommentaire implements Serializable {
     }
 
     public NCommentaire(NPersonne reducteur, NEvenement evenement,String content){
-        this.content=content;
-        this.evenement=evenement;
-        this.reducteur=reducteur;
+        setContent(content);
+        setEvenement(evenement);
+        setReducteur(reducteur);
 
     }
 
@@ -38,7 +38,7 @@ public class NCommentaire implements Serializable {
         this.id = id;
     }
 
-    @ManyToOne
+    @ManyToOne//(cascade = CascadeType.REMOVE)
     @JsonIgnore
     public NPersonne getReducteur() {
         return reducteur;
@@ -48,7 +48,7 @@ public class NCommentaire implements Serializable {
         this.reducteur = reducteur;
     }
 
-    @ManyToOne()
+    @ManyToOne//(cascade = CascadeType.REMOVE)
     @JsonIgnore
     public NEvenement getEvenement() {
         return evenement;

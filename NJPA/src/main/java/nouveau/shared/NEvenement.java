@@ -28,13 +28,13 @@ public class NEvenement implements Serializable{
         //JPA default
     }
 
-    public NEvenement(NPersonne p,String depart,String dest){
-        this.voiture=p.getVoiture();
+    public NEvenement(NPersonne conducteur,String depart,String dest){
+        this.voiture=conducteur.getVoiture();
         if(voiture!=null) {
-            this.villeDepart = depart;
-            this.villeDest = dest;
-            this.conducteur = p;
-            this.nbPlaceReste = p.getVoiture().getNbPlaceTotal();
+            setVilleDepart(depart);
+            setVilleDest(dest);
+            setConducteur(conducteur);
+            setNbPlaceReste(conducteur.getVoiture().getNbPlaceTotal());
             addParticipant(conducteur);
         }
         else{
@@ -145,7 +145,7 @@ public class NEvenement implements Serializable{
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("all")
     public boolean removePersonne(NPersonne p){
         if(participants.contains(p) ) {
             if( p!=conducteur) {
@@ -178,20 +178,28 @@ public class NEvenement implements Serializable{
             nbPlaceReste++;
             setConducteur(null);
             setVoiture(null);
-            //setNbPlaceReste(0);
+            setNbPlaceReste(4);//par defaut 4 places
         }
+
     }
 
     public void removeCommentaire(NCommentaire c){
-        commentaires.remove(c);
+        if(commentaires.contains(c)) {
+            commentaires.remove(c);
+        }
     }
 
 
-    @PreRemove
+
     public void onPreremove(){
 
+            System.out.println("in evenement onPreRemove");
             for(NPersonne p: this.participants){
                 p.removeEvenement(this);
+            }
+
+            for(NCommentaire c:this.commentaires){
+                c.setEvenement(null);
             }
             this.commentaires.clear();
             this.participants.clear();

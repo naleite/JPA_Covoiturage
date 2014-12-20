@@ -25,10 +25,10 @@ public class NPersonne implements Serializable {
         //JPA
     }
     public NPersonne(String nom){
-        this.nom=nom;
+        setNom(nom);
     }
     public NPersonne(String nom,NVoiture voiture){
-        this.nom=nom;
+        setNom(nom);
         setVoiture(voiture);
 
     }
@@ -51,7 +51,7 @@ public class NPersonne implements Serializable {
         this.nom = nom;
     }
 
-    @ManyToMany(mappedBy = "participants",cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "participants")
     @JsonIgnore
     public List<NEvenement> getEvenements() {
         return evenements;
@@ -114,6 +114,12 @@ public class NPersonne implements Serializable {
         commentaires.add(c);
     }
 
+    public void removeCommentaire(NCommentaire c){
+        if(commentaires.contains(c)){
+            commentaires.remove(c);
+        }
+    }
+
     public String toString(){
         String s="nom: "+this.nom+" evs:\n";
         for(int i=0;i<evenements.size();i++){
@@ -121,6 +127,19 @@ public class NPersonne implements Serializable {
         }
         return s;
     }
+
+
+    public void onPreRemove(){
+
+        System.out.println("in personne onPreRemove");
+        for(NEvenement e: this.evenements){
+            e.removePersonneSimple(this);
+        }
+        this.commentaires.clear();
+        this.evenements.clear();
+    }
+
+
 
 
 

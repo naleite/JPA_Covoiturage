@@ -27,7 +27,7 @@ public class NResourceImpl implements NService {
         em=SingletonManager.getManager();
 
         if(JPATest1.getExe()>0) {
-            JPATest1.main();
+            JPATest1.test(em);
             JPATest1.decExe();
         }
     }
@@ -188,18 +188,34 @@ public class NResourceImpl implements NService {
             //NEvenement ev=em.find(NEvenement.class,id);
             NEvenement ev=(NEvenement)query.getSingleResult();
 
+            //supprimer les commentaire
+
+            for (NCommentaire c : ev.getCommentaires()) {
+                    c.setEvenement(null);
+                    c.setReducteur(null);
+
+            }
+
             for(NPersonne p:ev.getParticipants()){
 
                 p.removeEvenement(ev);
 
-            }
-            ev.getParticipants().clear();
-            for(NCommentaire c:ev.getCommentaires()){
-                c.setEvenement(null);
-            }
-            ev.getCommentaires().clear();
-            em.remove(ev);
+                for(NCommentaire c:p.getCommentaires()){
+                    if(c.getEvenement().equals(ev)) {
+                        c.setReducteur(null);
+                        c.setEvenement(null);
+                    }
+                }
 
+
+            }
+            ev.setConducteur(null);
+            ev.setVoiture(null);
+            ev.getParticipants().clear();
+            ev.getCommentaires().clear();
+
+
+            em.remove(ev);
             return "ok";
         }
         catch (Exception e){return "nok";}
@@ -223,16 +239,32 @@ public class NResourceImpl implements NService {
             tx.begin();
             NPersonne p=(NPersonne) query.getSingleResult();
 
-            for(NEvenement ev:p.getEvenements()){
-                ev.removePersonne(p);
-            }
-
             for(NCommentaire c:p.getCommentaires()){
                 c.setReducteur(null);
+                c.setEvenement(null);
+                p.removeCommentaire(c);
+
             }
+            for(NEvenement ev:p.getEvenements()){
+
+                ev.removePersonneSimple(p);
+
+                for(NCommentaire c:ev.getCommentaires()){
+                    if(c.getReducteur().equals(p)) {
+                        c.setReducteur(null);
+                        c.setEvenement(null);
+                        ev.removeCommentaire(c);
+                    }
+                }
+            }
+
+
+            p.setVoiture(null);
             p.getEvenements().clear();
             p.getCommentaires().clear();
 
+            //Query query1=em.createQuery("delete from NEvenement e where e.conducteur=:pid").setParameter("pid",id);
+            //query1.executeUpdate();
             em.remove(p);
 
             return "ok";
@@ -295,10 +327,8 @@ public class NResourceImpl implements NService {
 
         try{
             tx.begin();
-            NCommentaire commentaire=new NCommentaire();
-            commentaire.setEvenement(e);
-            commentaire.setContent(cmt);
-            commentaire.setReducteur(p);
+            NCommentaire commentaire=new NCommentaire(p,e,cmt);
+            e.addCommentaire(commentaire);
             em.persist(commentaire);
             return "ok";
 
