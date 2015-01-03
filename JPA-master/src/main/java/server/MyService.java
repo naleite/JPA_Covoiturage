@@ -27,6 +27,8 @@ public interface MyService {
 
 	public abstract void deleteById(String arg0);
 	
+	public abstract void deleteByEv(String arg0);
+	
 	public abstract void createPersonne();
 	
 	public List<Personne> getAllPersonne();

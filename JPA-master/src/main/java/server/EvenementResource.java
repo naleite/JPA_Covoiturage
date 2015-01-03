@@ -166,9 +166,29 @@ public class EvenementResource implements MyService {
 		List<Personne> ch=query.getResultList();
 		return ch;
 	}
-
+	
 	@DELETE
 	@Path("delete/{id}")
+	public void deleteByEv(@PathParam("id") String arg0) {
+		EntityTransaction t = manager.getTransaction();
+		t.begin();
+		Evenement e = manager.find(Evenement.class,Long.parseLong(arg0));
+		
+		e.getConducteur().getListEvCond().remove(e);
+		for(Personne p: e.getParticipants())
+		{
+			p.getListEvent().remove(e);
+		}
+		for(Commentaire c: e.getListComEv())
+		{
+			c.getPersonne().getListCom().remove(c);
+			manager.remove(c);
+		}
+		t.commit();
+	}
+
+	@DELETE
+	@Path("delete/personne/{id}")
 	public void deleteById(@PathParam("id") String arg0) {
 		
 		EntityTransaction t = manager.getTransaction();
@@ -186,7 +206,6 @@ public class EvenementResource implements MyService {
 		System.out.println("deleting commentaire c......");
 		for(Commentaire c: p.getListCom())
 		{
-			//c.getPersonne().getListCom().remove(c);
 			c.getEvenement().getListComEv().remove(c);
 			System.out.println("remove com_id: "+c.getId()+" value = "+c.getValue());
 			manager.remove(c);
@@ -209,7 +228,6 @@ public class EvenementResource implements MyService {
 			System.out.println("**deleting commentaire from event");
 			for(Commentaire c: e.getListComEv())
 			{
-				//c.getPersonne().getListCom().remove(c);
 				c.getEvenement().getListComEv().remove(c);
 				manager.remove(c);
 			}
