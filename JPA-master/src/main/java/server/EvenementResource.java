@@ -116,9 +116,11 @@ public class EvenementResource implements MyService {
 	@GET
 	@Path("findev/{depart}/{dest}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Evenement> findEvenement(String depart, String dest) {
-		Query query=manager.createQuery("SELECT evens FROM EVENEMENT AS evens WHERE DEPART="+depart+" AND DEST="+dest+"");
+	public List<Evenement> findEvenement(@PathParam("depart") String depart, @PathParam("dest")String dest) {
+		Query query=manager.createQuery("SELECT evens FROM Evenement evens WHERE DEPART=:dep AND DEST=:des")
+				.setParameter("dep",depart).setParameter("des",dest);
 		List result=query.getResultList();
+		
 		return result;
 	}
 
