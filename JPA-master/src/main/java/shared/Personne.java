@@ -28,7 +28,7 @@ public class Personne {
 	private List<Evenement> listEvent= new ArrayList<Evenement>();
 	private List<Evenement> listEvCond= new ArrayList<Evenement>();//liste des evenements ou la personne est conducteur
 	private Voiture voiture;
-	private List<Commentaire> listCom=new ArrayList<Commentaire>();;
+	private List<Commentaire> listCom=new ArrayList<Commentaire>();
 	
 
 	protected void setId(long id) {
@@ -121,9 +121,9 @@ public class Personne {
 		Commentaire c = new Commentaire();
 		c.setPersonne(this);
 		c.setEvenement(ev);
-		ev.getListComEv().add(c);
 		c.setValue(ch);
 		ev.getListComEv().add(c);
+		this.getListCom().add(c);
 		return c;
 		
 	}

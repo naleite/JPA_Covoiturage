@@ -183,33 +183,46 @@ public class EvenementResource implements MyService {
 			e.getParticipants().remove(p);
 			System.out.println("remove ev_id: "+e.getId());
 		}
-		System.out.println("deleting commentaire ......");
-		for (Commentaire c: p.getListCom())
+		System.out.println("deleting commentaire c......");
+		for(Commentaire c: p.getListCom())
 		{
-			c.setPersonne(null);
-			c.setEvenement(null);
+			//c.getPersonne().getListCom().remove(c);
+			c.getEvenement().getListComEv().remove(c);
+			System.out.println("remove com_id: "+c.getId()+" value = "+c.getValue());
 			manager.remove(c);
-			System.out.println("remove com_id: "+c.getId());
+			
 		}
 		
 		//supprime les evenements ou la personne est conducteur
+		System.out.println("deleting event from driver");
+		
 		for (Evenement e : p.getListEvCond())
 		{
+			System.out.println("**deleting personne from event");
 			for(Personne p1: e.getParticipants())
 			{
 				e.getParticipants().remove(p1);
 				p1.getListEvent().remove(e);//retire la participation à l'evenement avant suppression
 				p1.getListEvCond().remove(e);
+				System.out.println("remove participant: "+p1.getId());
 			}
-			
+			System.out.println("**deleting commentaire from event");
 			for(Commentaire c: e.getListComEv())
 			{
+				//c.getPersonne().getListCom().remove(c);
+				c.getEvenement().getListComEv().remove(c);
 				manager.remove(c);
 			}
 			manager.remove(e);//supprime l'evenement si la personne est conducteur
 		}
-		manager.remove(p.getVoiture());
+	
+		if(p.getVoiture() != null)
+		{
+			manager.remove(p.getVoiture());
+		}
+		
 		manager.remove(p);
+		System.out.println("*******finish deleteById");
 		t.commit();
 	}
 
