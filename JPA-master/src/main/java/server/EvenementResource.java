@@ -183,6 +183,14 @@ public class EvenementResource implements MyService {
 			e.getParticipants().remove(p);
 			System.out.println("remove ev_id: "+e.getId());
 		}
+		System.out.println("deleting commentaire ......");
+		for (Commentaire c: p.getListCom())
+		{
+			c.setPersonne(null);
+			c.setEvenement(null);
+			manager.remove(c);
+			System.out.println("remove com_id: "+c.getId());
+		}
 		
 		//supprime les evenements ou la personne est conducteur
 		for (Evenement e : p.getListEvCond())
@@ -192,6 +200,11 @@ public class EvenementResource implements MyService {
 				e.getParticipants().remove(p1);
 				p1.getListEvent().remove(e);//retire la participation à l'evenement avant suppression
 				p1.getListEvCond().remove(e);
+			}
+			
+			for(Commentaire c: e.getListComEv())
+			{
+				manager.remove(c);
 			}
 			manager.remove(e);//supprime l'evenement si la personne est conducteur
 		}
