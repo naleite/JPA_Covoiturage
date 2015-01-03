@@ -38,6 +38,22 @@ public class EvenementResource implements MyService {
 			
 			
 			t.begin();
+			
+			Personne c1=new Personne();
+			Voiture v1=new Voiture();
+			((Personne) c1).setVoiture(v1);
+			v1.setNbPlaceTotal(5);
+			v1.setSeries("Peugeot 306");
+			manager.persist(v1);
+			c1.setNom("Vicky la Conductrice");
+			c1.setDestination("Marseille");
+			c1.setLocalisation("Rennes");
+			Date date1=new Date();
+			Evenement trajet2=((Personne) c1).proposeTrajet(c1.getLocalisation(),c1.getDestination(),date1);
+			manager.persist(c1);
+			manager.persist(trajet2);
+			
+			
 			Voiture v=new Voiture();
 			v.setNbPlaceTotal(3);
 			v.setSeries("Benz");
