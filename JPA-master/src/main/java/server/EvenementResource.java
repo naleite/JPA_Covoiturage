@@ -170,7 +170,7 @@ public class EvenementResource implements MyService {
 	
 	@DELETE
 	@Path("delete/{id}")
-	public void deleteByEv(@PathParam("id") String arg0) {
+	public void deleteByEvId(@PathParam("id") String arg0) {
 		EntityTransaction t = manager.getTransaction();
 		t.begin();
 		Evenement e = manager.find(Evenement.class,Long.parseLong(arg0));
@@ -185,6 +185,7 @@ public class EvenementResource implements MyService {
 			c.getPersonne().getListCom().remove(c);
 			manager.remove(c);
 		}
+		manager.remove(e);
 		t.commit();
 	}
 
