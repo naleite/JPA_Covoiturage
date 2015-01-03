@@ -87,7 +87,6 @@ public class Personne {
 	}
 	
 	@OneToOne
-	@JsonIgnore
 	public Voiture getVoiture() {
 		return voiture;
 	}

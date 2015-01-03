@@ -1,6 +1,7 @@
 package shared;
 
 import javax.persistence.*;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 public class Voiture {
@@ -19,6 +20,7 @@ public class Voiture {
 	  * @return the proprietaire de la voiture
 	  */
 	 @OneToOne
+	 @JsonIgnore
 	 public Personne getProprietaire() {
 		 return proprietaire;
 	 }
