@@ -98,18 +98,16 @@ public class EvenementResource implements MyService {
 		
 	}
 
-    //@TODO Pas reussir ici, ni Get ni Post. Mais je crois post est plus logique.
 	@POST
-	@Path("propose/{id}-{depart}-{dest}")
-	//@Produces({ MediaType.APPLICATION_JSON })
-	public Evenement proposeTrajet(@PathParam ("id") String id,@PathParam ("depart") String depart,@PathParam ("dest") String dest,
-			Date dateDeDepart) {
-		Query query=manager.createQuery("SELECT p FROM PERSONNE  AS p WHERE ID=id");
+	@Path("propose/")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Evenement proposeTrajet(@FormParam ("id") String id,@FormParam ("depart") String depart,@FormParam ("dest") String dest) {
+		Query query=manager.createQuery("SELECT p FROM Personne p WHERE ID=:id").setParameter("id",id);
 		List result=query.getResultList();
-	
 		Personne personne = (Personne) result.get(0);
-        Evenement ev=personne.proposeTrajet(depart, dest, dateDeDepart);
-		manager.persist(personne.proposeTrajet(depart, dest, dateDeDepart));
+        Evenement ev=personne.proposeTrajet(depart, dest, new Date());
+		manager.persist(ev);
 		return ev;
 	}
 	
