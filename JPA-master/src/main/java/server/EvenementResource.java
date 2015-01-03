@@ -3,6 +3,7 @@ package server;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Iterator;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
@@ -194,8 +195,8 @@ public class EvenementResource implements MyService {
 		EntityTransaction t = manager.getTransaction();
 		t.begin();
 		Personne p = manager.find(Personne.class,Long.parseLong(arg0));
-		System.out.println("personne to delete ="+p.getNom());
 		System.out.println("**********************************************");
+		System.out.println("personne to delete ="+p.getNom());
 		
 		//retire la personne dans les evenements ou il a participé.
 		for (Evenement e : p.getListEvent())
@@ -209,7 +210,6 @@ public class EvenementResource implements MyService {
 			c.getEvenement().getListComEv().remove(c);
 			System.out.println("remove com_id: "+c.getId()+" value = "+c.getValue());
 			manager.remove(c);
-			
 		}
 		
 		//supprime les evenements ou la personne est conducteur
@@ -220,16 +220,36 @@ public class EvenementResource implements MyService {
 			System.out.println("**deleting personne from event");
 			for(Personne p1: e.getParticipants())
 			{
-				e.getParticipants().remove(p1);
-				p1.getListEvent().remove(e);//retire la participation à l'evenement avant suppression
+				//suppression de la participation d'un participant à l'evenement
+				//p1.getListEvent().remove(e);//retire la participation à l'evenement avant suppression
 				p1.getListEvCond().remove(e);
 				System.out.println("remove participant: "+p1.getId());
+				//e.getParticipants().remove(p1);
+				//suppression des commentaires 
+				Iterator listCom = p1.getListCom().iterator();
+				while(listCom.hasNext() )
+				{
+					Commentaire c = (Commentaire) listCom.next();
+					if(c.getEvenement() == e)
+					{
+						System.out.println("commentaire trouvé");
+						//c.getEvenement().getistComEv().remove(c);
+						listCom.remove();//retire le commentaire courant de la liste de com
+						//p1.getListCom().remove(c);
+						manager.remove(c);
+					}
+				}
 			}
 			System.out.println("**deleting commentaire from event");
-			for(Commentaire c: e.getListComEv())
+			Iterator<Commentaire> iterListComEv = e.getListComEv().iterator();
+			while(iterListComEv.hasNext())
 			{
-				c.getEvenement().getListComEv().remove(c);
+				Commentaire c  = iterListComEv.next();
+				c.getPersonne().getListCom().remove(c);
+				
+				iterListComEv.remove();
 				manager.remove(c);
+				
 			}
 			manager.remove(e);//supprime l'evenement si la personne est conducteur
 		}
