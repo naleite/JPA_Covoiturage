@@ -103,11 +103,17 @@ public class EvenementResource implements MyService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Evenement proposeTrajet(@FormParam ("id") String id,@FormParam ("depart") String depart,@FormParam ("dest") String dest) {
+		
+		
+		manager.getTransaction().begin();
 		Query query=manager.createQuery("SELECT p FROM Personne p WHERE ID=:id").setParameter("id",id);
 		List result=query.getResultList();
 		Personne personne = (Personne) result.get(0);
         Evenement ev=personne.proposeTrajet(depart, dest, new Date());
 		manager.persist(ev);
+		manager.getTransaction().commit();
+		
+		
 		return ev;
 	}
 	

@@ -49,7 +49,8 @@ public Evenement() {
 /**
  * @return the id
  */
-@Id @GeneratedValue
+@Id
+@GeneratedValue
 public long getId() {
 	return id;
 }
