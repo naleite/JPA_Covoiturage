@@ -4,34 +4,22 @@
         <script>
         function PostsCtrlAjax($scope, $http)
         {
-        	var idPersonne = $location.url();
         	
-        	// => {foo: 'bar', baz: 'xoxo'}
-
-        /**$http({method: 'GET', url: 'http://localhost:8080/rest/ev/personne/id/{{paramValue}}'})
+        	//var myParam = window.location.search.split('id=')[1];
+        	$scope.param = window.location.search.split('id=')[1];
+        	$http({method: 'GET', url:'http://localhost:8080/rest/ev/personne/id/'+$scope.param})
         	.success(function(data){
-        		alert("aaas");
-        			$scope.posts = data;
-        		/**	if($scope.posts)
-        				{
-        				window.location.href = "index.html";
-        				}
-        			else
-        				{
-        					alert("aaas");
-        				}
-        	}).
-  		  error(function(data, status, headers, config) {
-			  alert("ECHEC: ");
-			  //window.location.href = "index.html";}
-        );
-		**/
+        			$scope.post = data;
+        	});
+        
         
         
         	
         $scope.createEv = function(idP) {
-			alert("aaa"+idPersonne);
-        	//window.location.href = "http://google.com";
+			
+			var myParam = window.location.search.split('id=')[1];
+			alert("aaa ja"+myParam);
+        	//window.location.reload();
         	}
         
         }
@@ -49,15 +37,14 @@
              <a href="index.html" >go to list evenement</a>
                <a href="create_personne.html" >go to create personne</a>
             <div id="ng-app" ng-app ng-controller="PostsCtrlAjax">  
-            	<form >
-	            		<button ng-click="createEv(1)">Create Evenement</button> 
-	            	</form>
-            	<div ng-repeat="post in posts" class='postBody'>
-	           		<h2><a href='{{post.id}}'>{{post.id}}</a></h2>
-	            	<div class='time'>{{post.nom}} </div>
+            	
+	           		<h2>Nom: {{post.nom}}</h2>
+	            	<div>{{post.id}} </div>
 	            	<div>Destination : {{post.destination}} </div>
+	            	<div>localisation : {{post.localisation}} </div>
+	            	<form ng-show="post.voiture != null">
+	            		<button ng-click="createEv(1)">Create Evenement</button> 
+	           	 	</form>
 	            	
-	            	
-            	</div>
             </div> 
     </body></html>
