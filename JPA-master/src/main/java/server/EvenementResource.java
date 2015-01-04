@@ -281,9 +281,9 @@ public class EvenementResource implements MyService {
 	@POST
 	@Path("createPersonne/")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public void createPersonne(
+	public Personne createPersonne(
 			@QueryParam("nom") String nom, 
-			@QueryParam("dest") String dest
+			@QueryParam("dest") String dest,
 			@QueryParam("localisation") String local, 
 			@QueryParam("series") String series, 
 			@QueryParam("nbplace") String nbplace ) {
@@ -296,16 +296,28 @@ public class EvenementResource implements MyService {
 		c1.setDestination(dest);
 		c1.setLocalisation(local);
 		
-		if((series != null) && (nbplace != null))
+		if((series != null) || (series.equals("")))
 		{
-			Voiture v1=new Voiture();
-			c1.setVoiture(v1);
-			v1.setNbPlaceTotal(5);
-			v1.setSeries("Peugeot 306");
-			manager.persist(v1);
+			if((nbplace != null) || (nbplace.equals("")))
+			{
+				try
+				{
+					int i = Integer.parseInt(nbplace);
+
+					Voiture v1=new Voiture();
+					c1.setVoiture(v1);
+					
+					v1.setNbPlaceTotal(i);
+					v1.setSeries(series);
+					manager.persist(v1);
+				}
+				catch(Exception e)
+				{}
+			}
 		}
 		manager.persist(c1);
 		t.commit();
+		return c1;
 	}
 	
 	@GET

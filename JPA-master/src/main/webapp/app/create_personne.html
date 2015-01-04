@@ -1,23 +1,68 @@
-<!doctype html><html lang="en" ng-app id="ng-app">
+<!doctype html><html lang="fr" ng-app id="ng-app">
     <head>    
         <script src="bower_components/angular/angular.min.js"></script>
         <script>
         function PostsCtrlAjax($scope, $http)
         {
-        
-        $scope.create = function(idEv) {
+        	
+        	$scope.haveACar = true;
+        	
+        	//valeur pour formulaire 
+        	$scope.myElementForm = {
+        			  nom:"" ,
+        			  dest:"",
+        			  localisation:"",
+        			  series:"",
+        			  nbplace:""
+        			};
+        $scope.turnCarTrue = function()
+        	{
+        		$scope.haveACar = false;
+        	}	
+        	
+        	$scope.turnCarFalse = function()
+        	{
+        		$scope.haveACar = true;
+        		 $scope.myElementForm.series="";
+        		 $scope.myElementForm.nbplace="";
+        	}
+        	
+        $scope.submitData= function() {
     		
-        	$http.post('http://localhost:8080/rest/ev/propose/{id}-{depart}-{dest}', {msg:'hello word!'}).
-        	  success(function(data, status, headers, config) {
-        	    // this callback will be called asynchronously
-        	    // when the response is available
-        	  }).
-        	  error(function(data, status, headers, config) {
-        	    // called asynchronously if an error occurs
-        	    // or server returns response with an error status.
-        	  });
-    		}
-        
+        	if(($scope.myElementForm.series && ! $scope.myElementForm.nbplace)
+        		|| (!$scope.myElementForm.series && $scope.myElementForm.nbplace))
+        		{
+        			alert("ECHEC: vérifier les champs concernant la voiture ");
+        		}
+        	else
+        		{
+        		$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+    			$http({method: 'post', 
+    				url: 'http://localhost:8080/rest/ev/createPersonne/', 
+    				params:{
+    					'nom' : $scope.myElementForm.nom, 
+    					'dest' : $scope.myElementForm.dest, 
+    					'localisation': $scope.myElementForm.localisation,
+    					'series' : $scope.myElementForm.series, 
+    					'nbplace' : $scope.myElementForm.nbplace,
+    					}
+    				}).success(function(data){
+        			alert("Evenement crée");
+        			window.location.href = "list_personne.html";
+        		})
+        		.error(function(data, status, headers, config) {
+            	    alert("echec "+ status);
+            	  });
+        		}
+        	
+        }
+        /**
+        @QueryParam("nom") String nom, 
+			@QueryParam("dest") String dest,
+			@QueryParam("localisation") String local, 
+			@QueryParam("series") String series, 
+			@QueryParam("nbplace") String nbplace )
+        **/
         }
         </script>
         <style>
@@ -35,7 +80,32 @@
             
             <div id="ng-app" ng-app ng-controller="PostsCtrlAjax"> 
 	            	<form >
-	            		
+	            		NOM:<br>
+						<input type="text" name="nom" ng-model="myElementForm.nom" name="depart" required><br>
+						
+						LOCALISATION:<br>
+						<input type="text" name="local" ng-model="myElementForm.localisation" required><br>
+						
+						Destination:<br>
+						<input type="text" name="local" ng-model="myElementForm.dest" required><br>
+						
+						 <form>
+						 	<p> Avez vous une voiture ?<br> </p>
+						  <label for="oui">Oui</label>
+						  <input type="radio" ng-click="turnCarTrue()" name="car" value="oui">
+						  <label for="non">Non</label>
+						  <input type="radio" ng-click="turnCarFalse()" name="car" value="non"><br>
+						</form> 
+						<div ng-hide="haveACar"> 
+							
+							Marque de voiture:<br>
+							<input type="text" name="local" ng-model="myElementForm.series" required><br>
+							
+							Nombre de place:<br>
+							<input type="number" min="1" max="20" name="local" ng-model="myElementForm.nbplace" required><br>
+						</div>
+	            		</br>
+	            		<button type="submit"  ng-click="submitData()">Create Personne</button> 
 	            	</form>
             </div> 
     </body></html>
