@@ -33,12 +33,12 @@
     		
         	if(!$scope.myElementForm.nom || !$scope.myElementForm.dest || !$scope.myElementForm.localisation)
         		{
-        			alert("ECHEC: vérifier les champs concernant les infos de la personne, les champs ne doivent pas être vides");
+        			alert("ECHEC: v&eacute;rifier les champs concernant les infos de la personne, les champs ne doivent pas être vides");
         		}
         	else if(($scope.myElementForm.series && ! $scope.myElementForm.nbplace)
         		|| (!$scope.myElementForm.series && $scope.myElementForm.nbplace))
         		{
-        			alert("ECHEC: vérifier les champs concernant la voiture ");
+        			alert("ECHEC: v&eacute;rifier les champs concernant la voiture ");
         		}
         	else
         		{
@@ -53,7 +53,7 @@
     					'nbplace' : $scope.myElementForm.nbplace,
     					}
     				}).success(function(data){
-        			alert("Personne crée avec succès");
+        			alert("Personne cr&eacute;e avec succès");
         			window.location.href = "list_personne.html";
         		})
         		.error(function(data, status, headers, config) {

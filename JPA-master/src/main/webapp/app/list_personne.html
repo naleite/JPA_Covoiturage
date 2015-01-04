@@ -1,4 +1,4 @@
-<!doctype html><html lang="en" ng-app id="ng-app">
+<!doctype html><html lang="fr" ng-app id="ng-app">
     <head>
     	<link rel="stylesheet" type="text/css" href="design.css" media="screen" />
         <script src="bower_components/angular/angular.min.js"></script>
@@ -16,7 +16,7 @@
     		$http({method: 'DELETE', url: 'http://localhost:8080/rest/ev/delete/personne/'+idEv})
     		
     		.success(function(data){
-    			alert("Personne supprimée avec succès: Personne.no: "+idEv);
+    			alert("Personne supprim&eacute;e avec succès: Personne.no: "+idEv);
     			window.location.href = "list_personne.html";
     		}).
     		  error(function(data, status, headers, config) {
@@ -49,10 +49,10 @@
             <h1>BDD des Personnes</h1> 
             
             <p>Vous pouvez Cliquer sur <strong class="more_detail">More Detail </strong>, 
-            </br> pour accéder au compte des personnes inscrites, et puis crée des evenements si 
+            </br> pour acc&eacute;der au compte des personnes inscrites, et puis cr&eacute;e des evenements si 
             </br>vous le voulez. 
             .</p>
-            <p>Vous pouvez Cliquer sur le bouton DELETE pour supprimer la personne de la base de données.</p>
+            <p>Vous pouvez Cliquer sur le bouton DELETE pour supprimer la personne de la base de donn&eacute;es.</p>
             
             <div id="ng-app" ng-app ng-controller="PostsCtrlAjax">  
             	<div ng-repeat="post in posts" class='postBody'>

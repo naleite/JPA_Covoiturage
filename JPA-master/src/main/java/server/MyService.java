@@ -29,7 +29,7 @@ public interface MyService {
 	
 	public abstract void deleteByEvId(String arg0);//OK
 	
-	public abstract Personne changeNom(String id, String nom);
+	public abstract Personne changeNom(String id, String nom);//Ok
 	
 	//OK
 	public abstract Personne createPersonne(String nom,String dest,String local, String series,String nbplace );
