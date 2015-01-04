@@ -1,25 +1,51 @@
-<!doctype html><html lang="en" ng-app id="ng-app">
+<!doctype html><html lang="fr" ng-app id="ng-app">
     <head>    
         <script src="bower_components/angular/angular.min.js"></script>
         <script>
         function PostsCtrlAjax($scope, $http)
         {
+        	
+        	
         	$scope.param = window.location.search.split('id=')[1];
+        	
+        	//valeur pour formulaire 
+        	$scope.myElementForm = {
+        			  id:$scope.param ,
+        			  depart:"",
+        			  destination:""
+        			};
+        	
         	$http({method: 'GET', url:'http://localhost:8080/rest/ev/personne/id/'+$scope.param})
         	.success(function(data){
         			$scope.post = data;
-        	});
-        
-        
+        	})
+        	.error(function(data, status, headers, config) {
+        	    alert("echec");
+        	  });
         
         	
-        $scope.createEv = function(idP) {
-			
-			var myParam = window.location.search.split('id=')[1];
-			alert("aaa ja"+myParam);
-        	//window.location.reload();
-        	}
         
+        	
+        $scope.submitData = function() {
+			
+			//var myParam = window.location.search.split('id=')[1];
+			//alert("aaa ja"+myElementForm.id+" "+myElementForm.depart+" "
+				//	+myElementForm.destination);
+			
+			$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+			$http({method: 'post', 
+				url: 'http://localhost:8080/rest/ev/propose/', 
+				params:{'id' : $scope.myElementForm.id, 'depart' : $scope.myElementForm.depart, 'dest': $scope.myElementForm.destination}
+				}).success(function(data){
+    			alert("You DELETED SUCCEFULLY evenemnt no: "+idEv);
+    			window.location.href = "index.html";
+    		})
+    		.error(function(data, status, headers, config) {
+        	    alert("echec"+ status);
+        	  });
+    		
+			
+        	}
         }
         </script>
         <style>
@@ -32,8 +58,8 @@
     </head>
     <body >
             <h1>Details Personne</h1>   
-             <a href="index.html" >go to list evenement</a>
-               <a href="create_personne.html" >go to create personne</a>
+            <a href="index.html" >go to list evenement</a>
+            <a href="create_personne.html" >go to create personne</a>
             <div id="ng-app" ng-app ng-controller="PostsCtrlAjax">  
             	
 	           		<h2>Nom: {{post.nom}}</h2>
@@ -46,20 +72,20 @@
 	            	</div>
 	            	
 	            	<form ng-show="post.voiture != null">
-	            		<p>Ici vous pouvez crée un Evenement de covoiturage </br>
-	            			Dans laquelle <strong>{{post.nom}}</strong> sera
-	            			conducteur.
+	            		<h3>Creation d'un Evenement</h3>
+	            		<p>Ici vous pouvez cr&eacute;e un Evenement de covoiturage </br>
+	            		Dans laquelle <strong>{{post.nom}}</strong> sera
+	            		conducteur.
 	            		</p>
-	            		<p>Veuillez spécifier la ville de départ et de destination SVP</p>
+	            		<p>Veuillez sp&eacute;cifier la ville de d&eacute;part et de destination SVP</p>
 	            		Depart:<br>
-						<input type="text" name="depart">
+						<input type="text" name="depart" ng-model="myElementForm.depart" name="depart" required>
 						<br>
 						
 						Destination:<br>
-						<input type="text" name="dest">
+						<input type="text" name="dest" ng-model="myElementForm.destination" required>
 						<br>
-	            		<button ng-click="createEv(1)">Create Evenement</button> 
+	            		<button type="submit"  ng-click="submitData()">Create Evenement</button> 
 	           	 	</form>
-	            	
             </div> 
     </body></html>

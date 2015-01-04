@@ -100,16 +100,15 @@ public class EvenementResource implements MyService {
 
 	@POST
 	@Path("propose/")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Evenement proposeTrajet(@FormParam ("id") String id,@FormParam ("depart") String depart,@FormParam ("dest") String dest) {
+	public Evenement proposeTrajet(@QueryParam("id") String id,@QueryParam("depart") String depart,@QueryParam("dest") String dest) {
 		
-		
+		System.out.println("$*********************************");
+		System.out.println("id = "+id);
+		System.out.println("$*********************************");
 		manager.getTransaction().begin();
-		Query query=manager.createQuery("SELECT p FROM Personne p WHERE ID=:id").setParameter("id",id);
-		List result=query.getResultList();
-		Personne personne = (Personne) result.get(0);
-        Evenement ev=personne.proposeTrajet(depart, dest, new Date());
+		Personne p = manager.find(Personne.class,Long.parseLong(id));
+        Evenement ev=p.proposeTrajet(depart, dest, new Date());
 		manager.persist(ev);
 		manager.getTransaction().commit();
 		
