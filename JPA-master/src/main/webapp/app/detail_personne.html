@@ -20,7 +20,7 @@
         			$scope.post = data;
         	})
         	.error(function(data, status, headers, config) {
-        	    alert("echec");
+        	    alert("echec "+status);
         	  });
         
         	
@@ -37,7 +37,7 @@
 				url: 'http://localhost:8080/rest/ev/propose/', 
 				params:{'id' : $scope.myElementForm.id, 'depart' : $scope.myElementForm.depart, 'dest': $scope.myElementForm.destination}
 				}).success(function(data){
-    			alert("You DELETED SUCCEFULLY evenemnt no: "+idEv);
+    			alert("Evenement crée");
     			window.location.href = "index.html";
     		})
     		.error(function(data, status, headers, config) {
