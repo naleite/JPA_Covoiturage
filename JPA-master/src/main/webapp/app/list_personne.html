@@ -20,6 +20,19 @@
     			  alert("ECHEC: "+idEv);
     			  });
     		}
+        	
+        $scope.createEv  = function(idP) {
+    		
+    		$http({method: 'post', url: 'http://localhost:8080/rest/ev/delete/personne/'+idEv}).success(function(data){
+    			alert("You DELETED SUCCEFULLY Personne no: "+idEv);
+    		}).
+    		  error(function(data, status, headers, config) {
+    			    // called asynchronously if an error occurs
+    			    // or server returns response with an error status.
+    			  alert("ECHEC: "+idEv);
+    			  });
+    		}
+        	
         
         }
         </script>
@@ -47,7 +60,9 @@
 	            	<form >
 	            		<button ng-click="delEv(post.id)">DELETE {{ post.id}}</button> 
 	            	</form> 
-	            	
+	            	<form action="" ng-show="post.voiture != null">
+	            		<button ng-click="createEv(post.id)">Create Evenement</button> 
+	            	</form>
             	</div>
             </div> 
     </body></html>
