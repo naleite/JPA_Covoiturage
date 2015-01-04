@@ -328,8 +328,19 @@ public class EvenementResource implements MyService {
 		Evenement ev = manager.find(Evenement.class,Long.parseLong(id));
 		return ev.getListComEv();
 	}
-
 	
+	@POST
+	@Path("changeNamePersonne/")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Personne changeNom(@QueryParam("id")String id, @QueryParam("nom")String nom )
+	{
+		EntityTransaction t = manager.getTransaction();
+		t.begin();
+		Personne p = manager.find(Personne.class,Long.parseLong(id));
+		p.setNom(nom);
+		t.commit();
+		return p;
+	}
 
 
 }

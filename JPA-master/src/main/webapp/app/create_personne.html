@@ -31,7 +31,11 @@
         	
         $scope.submitData= function() {
     		
-        	if(($scope.myElementForm.series && ! $scope.myElementForm.nbplace)
+        	if(!$scope.myElementForm.nom || !$scope.myElementForm.dest || !$scope.myElementForm.localisation)
+        		{
+        			alert("ECHEC: vérifier les champs concernant les infos de la personne, les champs ne doivent pas être vides");
+        		}
+        	else if(($scope.myElementForm.series && ! $scope.myElementForm.nbplace)
         		|| (!$scope.myElementForm.series && $scope.myElementForm.nbplace))
         		{
         			alert("ECHEC: vérifier les champs concernant la voiture ");

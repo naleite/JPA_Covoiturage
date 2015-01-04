@@ -16,7 +16,7 @@
     		$http({method: 'DELETE', url: 'http://localhost:8080/rest/ev/delete/personne/'+idEv})
     		
     		.success(function(data){
-    			alert("You DELETED SUCCEFULLY Personne no: "+idEv);
+    			alert("Personne supprimée avec succès: Personne.no: "+idEv);
     			window.location.href = "list_personne.html";
     		}).
     		  error(function(data, status, headers, config) {
@@ -48,17 +48,20 @@
     <body >
             <h1>BDD des Personnes</h1> 
             
-            <p>Vous pouvez Cliquer sur <strong class="more_detail">More Detail </strong>, pour accéder au compte des personnes inscrites.</p>
+            <p>Vous pouvez Cliquer sur <strong class="more_detail">More Detail </strong>, 
+            </br> pour accéder au compte des personnes inscrites, et puis crée des evenements si 
+            </br>vous le voulez. 
+            .</p>
             <p>Vous pouvez Cliquer sur le bouton DELETE pour supprimer la personne de la base de données.</p>
             
             <div id="ng-app" ng-app ng-controller="PostsCtrlAjax">  
             	<div ng-repeat="post in posts" class='postBody'>
-	           		<h2  class="more_detail"><a href='{{post.id}}'>{{post.id}}</a></h2>
+	           		<h2  class="more_detail">{{post.id}}</h2>
 	            	<div class='time'>{{post.nom}} </div>
 	            	<div>Destination : {{post.destination}} </div>
 	            	<div ng-show="post.voiture != null">Voiture : {{post.voiture.series}}</div>
 	            	<form >
-	            		<a href="detail_personne.html?id={{post.id}}">More detail</a>
+	            		<a class="blue_background" href="detail_personne.html?id={{post.id}}">More detail</a>
 	            		<button ng-click="delEv(post.id)">DELETE {{ post.id}}</button> 
 	            	</form> 
             	</div>
