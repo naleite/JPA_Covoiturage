@@ -4,27 +4,34 @@
         <script>
         function PostsCtrlAjax($scope, $http)
         {
-        	var paramValue = $location.search().myParam; 
-        $http({method: 'GET', url: 'http://localhost:8080/rest/ev/personne/id/{{paramValue}}'})
+        	var idPersonne = $location.url();
+        	
+        	// => {foo: 'bar', baz: 'xoxo'}
+
+        /**$http({method: 'GET', url: 'http://localhost:8080/rest/ev/personne/id/{{paramValue}}'})
         	.success(function(data){
+        		alert("aaas");
         			$scope.posts = data;
-        	});
+        		/**	if($scope.posts)
+        				{
+        				window.location.href = "index.html";
+        				}
+        			else
+        				{
+        					alert("aaas");
+        				}
+        	}).
+  		  error(function(data, status, headers, config) {
+			  alert("ECHEC: ");
+			  //window.location.href = "index.html";}
+        );
+		**/
         
         
-        $scope.delEv = function(idEv) {
-    		
-    		$http({method: 'DELETE', url: 'http://localhost:8080/rest/ev/delete/personne/'+idEv})
-    		
-    		.success(function(data){
-    			alert("You DELETED SUCCEFULLY Personne no: "+idEv);
-    		}).
-    		  error(function(data, status, headers, config) {
-    			  alert("ECHEC: "+idEv);
-    			  });
-    		}
         	
         $scope.createEv = function(idP) {
-        	window.location.href = "http://google.com"
+			alert("aaa"+idPersonne);
+        	//window.location.href = "http://google.com";
         	}
         
         }
@@ -39,20 +46,18 @@
     </head>
     <body >
             <h1>Details Personne</h1>   
-              <a href="index.html" >go to list evenement</a>
+             <a href="index.html" >go to list evenement</a>
                <a href="create_personne.html" >go to create personne</a>
             <div id="ng-app" ng-app ng-controller="PostsCtrlAjax">  
+            	<form >
+	            		<button ng-click="createEv(1)">Create Evenement</button> 
+	            	</form>
             	<div ng-repeat="post in posts" class='postBody'>
 	           		<h2><a href='{{post.id}}'>{{post.id}}</a></h2>
 	            	<div class='time'>{{post.nom}} </div>
 	            	<div>Destination : {{post.destination}} </div>
-	            	<form >
-	            		<a href="detail_personne.html?id={{post.id}}">More detail</a>
-	            		<button ng-click="delEv(post.id)">DELETE {{ post.id}}</button> 
-	            	</form> 
-	            	<form ng-show="post.voiture != null">
-	            		<button ng-click="createEv(post.id)">Create Evenement</button> 
-	            	</form>
+	            	
+	            	
             	</div>
             </div> 
     </body></html>

@@ -16,6 +16,7 @@
     		
     		.success(function(data){
     			alert("You DELETED SUCCEFULLY Personne no: "+idEv);
+    			window.location.href = "list_personne.html";
     		}).
     		  error(function(data, status, headers, config) {
     			  alert("ECHEC: "+idEv);

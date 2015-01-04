@@ -15,6 +15,7 @@
     		
     		$http({method: 'DELETE', url: 'http://localhost:8080/rest/ev/delete/'+idEv}).success(function(data){
     			alert("You DELETED SUCCEFULLY evenemnt no: "+idEv);
+    			window.location.href = "index.html";
     		});
     		}
         
