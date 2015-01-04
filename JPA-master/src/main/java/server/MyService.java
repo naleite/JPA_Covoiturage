@@ -11,9 +11,9 @@ public interface MyService {
 	
 	//EVENEMENT
 	
-	public abstract String proposeTrajet(String id, Date dateDeDepart);
+	public Evenement proposeTrajet(String id,String depart,String dest);//OK
 	
-	public abstract List<Evenement> listev();
+	public abstract List<Evenement> listev(); //OK
 	
 	//COMMENTAIRE
 	
@@ -25,13 +25,13 @@ public interface MyService {
 	
 	public abstract void takeTrajet(long idPersonne, long idEven);
 
-	public abstract void deleteById(String arg0);
+	public abstract void deleteById(String arg0);//ok
 	
-	public abstract void deleteByEvId(String arg0);
+	public abstract void deleteByEvId(String arg0);//OK
 	
-	public abstract void createPersonne();
+	public abstract void createPersonne(String nom,String dest,String local, String series,String nbplace )
 	
-	public List<Personne> getAllPersonne();
+	public List<Personne> getAllPersonne(); //OK
 	
-	public Personne getPersonne(String id);
+	public Personne getPersonne(String id); //OK
 }

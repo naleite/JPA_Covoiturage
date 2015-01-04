@@ -227,7 +227,6 @@ public class EvenementResource implements MyService {
 			for(Personne p1: e.getParticipants())
 			{
 				//suppression de la participation d'un participant à l'evenement
-				//p1.getListEvent().remove(e);//retire la participation à l'evenement avant suppression
 				p1.getListEvCond().remove(e);
 				System.out.println("remove participant: "+p1.getId());
 				//e.getParticipants().remove(p1);
@@ -279,16 +278,34 @@ public class EvenementResource implements MyService {
 		return p;
 	}
 	
-	@Override
-	public void createPersonne() {
-		// TODO Auto-generated method stub
+	@POST
+	@Path("createPersonne/")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public void createPersonne(
+			@QueryParam("nom") String nom, 
+			@QueryParam("dest") String dest
+			@QueryParam("localisation") String local, 
+			@QueryParam("series") String series, 
+			@QueryParam("nbplace") String nbplace ) {
 		
-	}
-
-	@Override
-	public String proposeTrajet(String id, Date dateDeDepart) {
-		// TODO Auto-generated method stub
-		return null;
+		EntityTransaction t = manager.getTransaction();
+		t.begin();
+		
+		Personne c1 = new Personne();
+		c1.setNom(nom);
+		c1.setDestination(dest);
+		c1.setLocalisation(local);
+		
+		if((series != null) && (nbplace != null))
+		{
+			Voiture v1=new Voiture();
+			c1.setVoiture(v1);
+			v1.setNbPlaceTotal(5);
+			v1.setSeries("Peugeot 306");
+			manager.persist(v1);
+		}
+		manager.persist(c1);
+		t.commit();
 	}
 	
 	@GET
