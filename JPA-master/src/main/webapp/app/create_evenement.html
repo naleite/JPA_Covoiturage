@@ -7,14 +7,16 @@
         
         $scope.create = function(idEv) {
     		
-        	$http.post('http://localhost:8080/rest/ev/propose/{id}-{depart}-{dest}', {msg:'hello word!'}).
+        	$http.post('http://localhost:8080/rest/ev/propose/', {msg:'hello word!'}).
         	  success(function(data, status, headers, config) {
         	    // this callback will be called asynchronously
         	    // when the response is available
+        		  alert("Creattion de l'evenement réussi");
         	  }).
         	  error(function(data, status, headers, config) {
         	    // called asynchronously if an error occurs
         	    // or server returns response with an error status.
+        		  alert("echec creation evenement");
         	  });
     		}
         
@@ -29,13 +31,16 @@
         </style>
     </head>
     <body >
-            <h1>CREER UNE PERSONNE</h1>   
+            <h1>Créer un Evenement</h1>   
             
             <a href="list_personne.html" >go to list personne</a>
             
-            <div id="ng-app" ng-app ng-controller="PostsCtrlAjax"> 
-	            	<form >
-	            		<button ng-click="delEv(post.id)">DELETE {{ post.id}}</button> 
-	            	</form>
+            <div id="ng-app" ng-app ng-controller="PostsCtrlAjax">
+	            <form action="http://localhost:8080/rest/ev/propose/">
+	            	<input type="text" name="id">
+	            	<input type="text" name="depart">
+	            	<input type="text" name="destination">
+	            	<button type="submit">Create Evenement</button> 
+	            </form>
             </div> 
     </body></html>

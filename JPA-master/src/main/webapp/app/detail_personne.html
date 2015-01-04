@@ -4,7 +4,8 @@
         <script>
         function PostsCtrlAjax($scope, $http)
         {
-        $http({method: 'GET', url: 'http://localhost:8080/rest/ev/personne'})
+        	var paramValue = $location.search().myParam; 
+        $http({method: 'GET', url: 'http://localhost:8080/rest/ev/personne/id/{{paramValue}}'})
         	.success(function(data){
         			$scope.posts = data;
         	});
@@ -37,7 +38,7 @@
         </style>
     </head>
     <body >
-            <h1>BDD des Personnes</h1>   
+            <h1>Details Personne</h1>   
               <a href="index.html" >go to list evenement</a>
                <a href="create_personne.html" >go to create personne</a>
             <div id="ng-app" ng-app ng-controller="PostsCtrlAjax">  
@@ -45,10 +46,6 @@
 	           		<h2><a href='{{post.id}}'>{{post.id}}</a></h2>
 	            	<div class='time'>{{post.nom}} </div>
 	            	<div>Destination : {{post.destination}} </div>
-	             <!-- "id": 1,
-4	"localisation": "Rennes",
-5	"destination": "Marseille",
-6	"nom": "Vicky la Conductrice"**/}} -->
 	            	<form >
 	            		<a href="detail_personne.html?id={{post.id}}">More detail</a>
 	            		<button ng-click="delEv(post.id)">DELETE {{ post.id}}</button> 

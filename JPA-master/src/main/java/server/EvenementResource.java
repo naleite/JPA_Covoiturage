@@ -270,7 +270,16 @@ public class EvenementResource implements MyService {
 		System.out.println("*******finish deleteById");
 		t.commit();
 	}
-
+	
+	@GET
+	@Path("personne/id/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Personne getPersonne(@PathParam("id") String id)
+	{
+		Personne p = manager.find(Personne.class,Long.parseLong(id));
+		return p;
+	}
+	
 	@Override
 	public void createPersonne() {
 		// TODO Auto-generated method stub

@@ -32,4 +32,6 @@ public interface MyService {
 	public abstract void createPersonne();
 	
 	public List<Personne> getAllPersonne();
+	
+	public Personne getPersonne(String id);
 }
