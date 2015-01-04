@@ -1,5 +1,6 @@
 <!doctype html><html lang="fr" ng-app id="ng-app">
-    <head>    
+    <head>
+    	<link rel="stylesheet" type="text/css" href="design.css" media="screen" />
         <script src="bower_components/angular/angular.min.js"></script>
         <script>
         function PostsCtrlAjax($scope, $http)
@@ -56,10 +57,16 @@
         .time{margin:10px 0px 10px 0px; color:#006699; }
         </style>
     </head>
+     <nav>
+    	<ul>
+    		<li>MENU</li>
+    		<li> <a href="list_personne.html" >go to List Personne</a></li>
+    		 <li><a href="index.html" >go to list evenement</a></li>
+    		<li><a href="create_personne.html" >go to create personne</a></li>
+    	</ul>
+    </nav>
     <body >
-            <h1>Details Personne</h1>   
-            <a href="index.html" >go to list evenement</a>
-            <a href="create_personne.html" >go to create personne</a>
+            <h1>Details Personne</h1>  
             <div id="ng-app" ng-app ng-controller="PostsCtrlAjax">  
             	
 	           		<h2>Nom: {{post.nom}}</h2>

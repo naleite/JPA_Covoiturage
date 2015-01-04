@@ -29,6 +29,7 @@ public interface MyService {
 	
 	public abstract void deleteByEvId(String arg0);//OK
 	
+	//OK
 	public abstract Personne createPersonne(String nom,String dest,String local, String series,String nbplace );
 	
 	public List<Personne> getAllPersonne(); //OK

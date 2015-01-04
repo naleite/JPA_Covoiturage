@@ -1,5 +1,7 @@
 <!doctype html><html lang="fr" ng-app id="ng-app">
-    <head>    
+    <head>   
+    	<link rel="stylesheet" type="text/css" href="design.css" media="screen" />
+    	
         <script src="bower_components/angular/angular.min.js"></script>
         <script>
         function PostsCtrlAjax($scope, $http)
@@ -47,7 +49,7 @@
     					'nbplace' : $scope.myElementForm.nbplace,
     					}
     				}).success(function(data){
-        			alert("Evenement crée");
+        			alert("Personne crée avec succès");
         			window.location.href = "list_personne.html";
         		})
         		.error(function(data, status, headers, config) {
@@ -73,10 +75,15 @@
         .time{margin:10px 0px 10px 0px; color:#006699; }
         </style>
     </head>
+     <nav>
+    	<ul>
+    		<li>MENU</li>
+    		<li> <a href="list_personne.html" >go to List Personne</a></li>
+    		 <li><a href="index.html" >go to list evenement</a></li>
+    	</ul>
+    </nav>
     <body >
-            <h1>CREER UNE PERSONNE</h1>   
-             <a href="index.html" >go to list evenement</a>
-            <a href="list_personne.html" >go to list personne</a>
+            <h1>CREER UNE PERSONNE</h1>  
             
             <div id="ng-app" ng-app ng-controller="PostsCtrlAjax"> 
 	            	<form >
