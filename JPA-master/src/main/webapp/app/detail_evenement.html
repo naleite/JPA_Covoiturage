@@ -6,78 +6,15 @@
         function PostsCtrlAjax($scope, $http)
         {
         	$scope.param = window.location.search.split('id=')[1];
-        	$scope.showModifNom = true;
-        	$scope.nouveau_nom= { //utile pour la modification du nom
-        			id:$scope.param ,
-        			nom:""
-        	}
         	
-        	
-        	
-        	//valeur pour formulaire 
-        	$scope.myElementForm = {
-        			  id:$scope.param ,
-        			  depart:"",
-        			  destination:""
-        			};
-        	
-        	$http({method: 'GET', url:'http://localhost:8080/rest/ev/personne/id/'+$scope.param})
+        	/**$http({method: 'GET', url:'localhost:8080/rest/ev/comev/2'})
         	.success(function(data){
-        			$scope.post = data;
+        			$scope.posts = data;
         	})
         	.error(function(data, status, headers, config) {
         	    alert("echec "+status);
-        	  });
-        
-        	
-        
-        	
-        $scope.submitData = function() {
-			
-			$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-			$http({method: 'post', 
-				url: 'http://localhost:8080/rest/ev/propose/', 
-				params:{'id' : $scope.myElementForm.id, 'depart' : $scope.myElementForm.depart, 'dest': $scope.myElementForm.destination}
-				}).success(function(data){
-    			alert("Evenement cr&eacute;e");
-    			window.location.href = "index.html";
-    		})
-    		.error(function(data, status, headers, config) {
-        	    alert("echec "+ status);
-        	  });
-    		
-			
-        	}
-     	
-        	$scope.showModifNomCtrl = function()
-        	{
-            	$scope.showModifNom = !$scope.showModifNom;
-        	}
-        	
-        	$scope.submitModifNom = function()
-        	{
-        		if($scope.nouveau_nom.id && $scope.nouveau_nom.nom) 
-        			{
-        			$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-        			$http({method: 'post', 
-        				url: 'http://localhost:8080/rest/ev/changeNamePersonne/', 
-        				params:{'id' : $scope.nouveau_nom.id, 
-        					'nom' : $scope.nouveau_nom.nom}
-        				}).success(function(data){
-            			alert("Votre demande a bien &eacute;t&eacute; pris en compte");
-            			window.location.href = "detail_personne.html?id="+$scope.param;
-            		})
-            		.error(function(data, status, headers, config) {
-                	    alert("échec "+ status);
-                	  });
-        			}
-        		else
-        			{
-        				alert('Echec de la modification du nom, v&eacute;rifier le champs à compl&eacute;ter');
-        			}
-        		
-        	}
-        	
+        	  });**/
+
         }
         </script>
         <style>
@@ -97,38 +34,10 @@
     	</ul>
     </nav>
     <body >
-            <h1>Details Personne</h1>  
-            <div id="ng-app" ng-app ng-controller="PostsCtrlAjax">  
-            	
-	           		<h2>Nom: {{post.nom}} <button ng-click="showModifNomCtrl()">Modifier</button></h2>
-	           		<div ng-hide="showModifNom">
-	            		<input type="text" name="nouveau_nom" ng-model="nouveau_nom.nom" required>
-	            		<button type="submit"  ng-click="submitModifNom()">Modifier le nom</button> 
-	            	</div></br>
-	            	<div>id: {{post.id}} </div>
-	            	<div>Destination : {{post.destination}} </div>
-	            	<div>localisation : {{post.localisation}} </div>
-	            	<div ng-show="post.voiture != null">
-	            		<p>Voiture : {{post.voiture.series}} </p>
-	            		<p>Nb Place: {{post.voiture.nbPlaceTotal}} </p>
-	            	</div>
-	            	
-	            	<form ng-show="post.voiture != null">
-	            		<h3>Creation d'un Evenement</h3>
-	            		<p>Ici vous pouvez cr&eacute;e un Evenement de covoiturage </br>
-	            		Dans laquelle <strong>{{post.nom}}</strong> sera
-	            		conducteur.
-	            		</p>
-	            		<p>Veuillez sp&eacute;cifier la ville de d&eacute;part et de destination SVP</p>
-	            		Depart:<br>
-						<input type="text" name="depart" ng-model="myElementForm.depart" required>
-						<br>
-						
-						Destination:<br>
-						<input type="text" name="dest" ng-model="myElementForm.destination" required>
-						<br>
-	            		<button type="submit"  ng-click="submitData()">Create Evenement</button> 
-	           	 	</form>
-	           	 	
+            <h1>Details Evenement</h1>  
+           <div id="ng-app" ng-app ng-controller="PostsCtrlAjax">  
+            	<div class="big_letter  class='postBody'>
+	           		<h2>idEvenement: </h2>
+            	</div>
             </div> 
     </body></html>

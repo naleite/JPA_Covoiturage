@@ -1,5 +1,6 @@
 <!doctype html><html lang="fr" ng-app id="ng-app">
     <head>
+    <!-- http://localhost:8080/app/index.html -->
     	<link rel="stylesheet" type="text/css" href="design.css" media="screen" />  
         <script src="bower_components/angular/angular.min.js"></script>
         <script>
@@ -20,6 +21,11 @@
     		});
     		}
         
+        $scope.gotoev = function(idP) {
+         	window.location.href = "detail_evenement.html?id="+idP;
+         	}
+         
+         
         }
         </script>
         <style>
@@ -48,6 +54,7 @@
 	            	
 	            	<form >
 	            		<button ng-click="delEv(post.id)">Supprimer</button> 
+	            		<button ng-click="gotoev(post.id)">Plus de Details</button> 
 	            	</form> 
 	            	
             	</div>

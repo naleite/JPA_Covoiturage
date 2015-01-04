@@ -24,8 +24,8 @@
     			  });
     		}
         	
-        $scope.createEv = function(idP) {
-        	window.location.href = "http://google.com"
+        $scope.gotopersonne = function(idP) {
+        	window.location.href = "detail_personne.html?id="+idP;
         	}
         
         }
@@ -61,8 +61,9 @@
 	            	<div>Destination : {{post.destination}} </div>
 	            	<div ng-show="post.voiture != null">Voiture : {{post.voiture.series}}</div>
 	            	<form >
-	            		<a class="blue_background" href="detail_personne.html?id={{post.id}}">More detail</a>
-	            		<button ng-click="delEv(post.id)">DELETE {{ post.id}}</button> 
+	            		<button ng-click="gotopersonne(post.id)">More Details</button> 
+	            	
+	            		<button ng-click="delEv(post.id)">Delete</button> 
 	            	</form> 
             	</div>
             </div> 
