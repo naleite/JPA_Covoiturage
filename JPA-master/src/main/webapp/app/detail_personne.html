@@ -4,8 +4,6 @@
         <script>
         function PostsCtrlAjax($scope, $http)
         {
-        	
-        	//var myParam = window.location.search.split('id=')[1];
         	$scope.param = window.location.search.split('id=')[1];
         	$http({method: 'GET', url:'http://localhost:8080/rest/ev/personne/id/'+$scope.param})
         	.success(function(data){
@@ -42,7 +40,24 @@
 	            	<div>{{post.id}} </div>
 	            	<div>Destination : {{post.destination}} </div>
 	            	<div>localisation : {{post.localisation}} </div>
+	            	<div ng-show="post.voiture != null">
+	            		<p>Voiture : {{post.voiture.series}} </p>
+	            		<p>Nb Place: {{post.voiture.nbPlaceTotal}} </p>
+	            	</div>
+	            	
 	            	<form ng-show="post.voiture != null">
+	            		<p>Ici vous pouvez crée un Evenement de covoiturage </br>
+	            			Dans laquelle <strong>{{post.nom}}</strong> sera
+	            			conducteur.
+	            		</p>
+	            		<p>Veuillez spécifier la ville de départ et de destination SVP</p>
+	            		Depart:<br>
+						<input type="text" name="depart">
+						<br>
+						
+						Destination:<br>
+						<input type="text" name="dest">
+						<br>
 	            		<button ng-click="createEv(1)">Create Evenement</button> 
 	           	 	</form>
 	            	
