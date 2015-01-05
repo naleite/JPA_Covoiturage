@@ -137,17 +137,17 @@ public class EvenementResource implements MyService {
 		manager.persist(personne.redigeCom(ev, ch));
 		
 	}
-
-	public void takeTrajet(long idPersonne, long idEven) {
+	
+	@POST
+	@Path("taketrajet/")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public void takeTrajet(@QueryParam("idPersonne")String idPersonne, @QueryParam("idEvenement")String idEven)
+	{
 		EntityTransaction t = manager.getTransaction();
 		t.begin();
-		
-		Query query_p=manager.createQuery("SELECT p FROM PERSONNE AS p WHERE ID=idPersonne");
-		List personnes=query_p.getResultList();	
-		Personne personne = (Personne) personnes.get(0);
-		Query query_e=manager.createQuery("SELECT evens FROM EVENEMENT AS evens WHERE ID=idEven");
-		Evenement ev=(Evenement) query_e.getResultList().get(0);
-		ev.addParticipant(personne);
+		Personne p =manager.find(Personne.class,Long.parseLong(idPersonne));
+		Evenement ev = manager.find(Evenement.class,Long.parseLong(idEven));
+		ev.addParticipant(p);
 		
 		t.commit();
 	}
@@ -193,7 +193,16 @@ public class EvenementResource implements MyService {
 		manager.remove(e);
 		t.commit();
 	}
-
+	
+	@GET
+	@Path("getevent/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Evenement getEvById(@PathParam("id") String idE)
+	{
+		Evenement e = manager.find(Evenement.class,Long.parseLong(idE));
+		return e;
+	}
+	
 	@DELETE
 	@Path("delete/personne/{id}")
 	public void deleteById(@PathParam("id") String arg0) {

@@ -12,15 +12,17 @@
         			nom:""
         	}
         	
+        	//participe evenement
+        	$scope.participe_evenement="";
         	
-        	
-        	//valeur pour formulaire 
+        	//valeur pour formulaire creer personne
         	$scope.myElementForm = {
         			  id:$scope.param ,
         			  depart:"",
         			  destination:""
         			};
         	
+        	//pour recuperer les infos de la personne
         	$http({method: 'GET', url:'http://localhost:8080/rest/ev/personne/id/'+$scope.param})
         	.success(function(data){
         			$scope.post = data;
@@ -28,7 +30,15 @@
         	.error(function(data, status, headers, config) {
         	    alert("echec "+status);
         	  });
-        
+        	
+        	//pour récupérer la liste des evenements
+        	$http({method: 'GET', url:'http://localhost:8080/rest/ev'})
+        	.success(function(data){
+        			$scope.evenements = data;
+        	})
+        	.error(function(data, status, headers, config) {
+        	    alert("echec "+status);
+        	  });
         	
         
         	
@@ -78,6 +88,32 @@
         		
         	}
         	
+        	$scope.participe = function()
+        	{
+        		if($scope.participe_evenement)
+        			{
+        				alert("alte "+$scope.participe_evenement);
+        				$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+            			$http({method: 'post', 
+            				url: 'http://localhost:8080/rest/ev/taketrajet/', 
+            				params:{'idPersonne' : $scope.param, 
+            					'idEvenement' : $scope.participe_evenement}
+            				}).success(function(data){
+                			alert("Votre demande a bien &eacute;t&eacute; pris en compte");
+                			window.location.href = "detail_personne.html?id="+$scope.param;
+                		})
+                		.error(function(data, status, headers, config) {
+                    	    alert("échec "+ status);
+                    	  });
+            			
+        			}
+        		else
+        			{
+        				alert("Veuillez choisir un evenement valide");
+        			}
+            	
+        	}
+        	
         }
         </script>
         <style>
@@ -113,7 +149,8 @@
 	            		<p>Nb Place: {{post.voiture.nbPlaceTotal}} </p>
 	            	</div>
 	            	
-	            	<form ng-show="post.voiture != null">
+	            	<form ng-show="post.voiture != null" id="zoneCreateEv">
+	            	<div class="decaler_droite">
 	            		<h3>Creation d'un Evenement</h3>
 	            		<p>Ici vous pouvez cr&eacute;e un Evenement de covoiturage </br>
 	            		Dans laquelle <strong>{{post.nom}}</strong> sera
@@ -127,8 +164,35 @@
 						Destination:<br>
 						<input type="text" name="dest" ng-model="myElementForm.destination" required>
 						<br>
-	            		<button type="submit"  ng-click="submitData()">Create Evenement</button> 
+	            		<button type="submit"  ng-click="submitData()">Create Evenement</button>
+	            	</div>
 	           	 	</form>
 	           	 	
+	           	 	<form id="zoneTakeTrajet" >
+	           	 	<div>
+	           	 		<h3>Participer à un evenement</h3>
+	           	 		<p>Ici vous pouvez participer à des evenements, vue sur la page montrant la
+	           	 			<a href="index.html">liste des evenements</a>
+	            		</p>
+	            		 <select name="menu_destination" ng-model="participe_evenement" >
+	            		 	  <option value=""></option>
+	            		 	  
+					          <option value="{{ev.id}}"  ng-repeat="ev in evenements" ng-value="ev.id">{{ev.id}}: {{ev.depart}} - {{ev.dest}} </option>
+
+					     </select>
+	            		<button type="submit" ng-click="participe()">Participer</button>
+	            		
+	            	</div>
+	           	 	</form>
+	           	 	
+	           	 	<form id="zoneCreateCommentaire">
+	           	 	<div>
+	           	 		<h3>Creation de Commentaire</h3>
+	           	 		<p>Ici vous pouvez r&eacute;diger des commentaires pour un des evenements ou vous
+	           	 		avez participé. </br>
+	            		
+	            		</p>
+	            	</div>
+	           	 	</form>
             </div> 
     </body></html>

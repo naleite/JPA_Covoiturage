@@ -15,15 +15,17 @@ public interface MyService {
 	
 	public abstract List<Evenement> listev(); //OK
 	
+	public abstract Evenement getEvById(String idE); //OK
+	
 	//COMMENTAIRE
 	
 	public abstract void redigeCom(long idPersone,long idEven, String ch);
 	
-	public abstract List<Commentaire> getAllComFromEv(String idEven);
+	public abstract List<Commentaire> getAllComFromEv(String idEven);//OK
 	
 	//PERSONNE
 	
-	public abstract void takeTrajet(long idPersonne, long idEven);
+	public abstract void takeTrajet(String idPersonne, String idEvenement);//OK
 
 	public abstract void deleteById(String arg0);//ok
 	

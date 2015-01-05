@@ -39,4 +39,26 @@ nav ul li {
 	background-color: aqua;
 }
 
+.comm
+{
+	color: blue;
+}
 
+.postBody
+{
+	margin-bottom: 25px;
+	border-bottom: medium;
+}
+
+#zoneCreateEv
+{
+	background-color: #F4F077;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.decaler_droite
+{
+	position:relative;
+	left: 10px;
+}
