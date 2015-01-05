@@ -12,8 +12,12 @@
         			nom:""
         	}
         	
-        	//participe evenement
+        	//participe evenement , pour la liste deroulante "participer"
         	$scope.participe_evenement="";
+        	
+        	//helper zone commentaire, pour la liste deroulante "commenter"
+        	$scope.commentaire_id_ev="";
+        	$scope.commentaire_value="";
         	
         	//valeur pour formulaire creer personne
         	$scope.myElementForm = {
@@ -31,16 +35,23 @@
         	    alert("echec "+status);
         	  });
         	
-        	//pour récupérer la liste des evenements
+        	//pour récupérer la liste des evenements ou la personne ne participe pas.
         	$http({method: 'GET', url:'http://localhost:8080/rest/ev/evenements_not_personne/'+$scope.param})
+        	.success(function(data){
+        			$scope.evenements_not = data;
+        	})
+        	.error(function(data, status, headers, config) {
+        	    alert("echec: evenement_not "+status);
+        	  });
+        	
+        	//pour récupérer la liste des evenements ou la personne participe.
+        	$http({method: 'GET', url:'http://localhost:8080/rest/ev/evenements_personne/'+$scope.param})
         	.success(function(data){
         			$scope.evenements = data;
         	})
         	.error(function(data, status, headers, config) {
-        	    alert("echec "+status);
+        	    alert("echec: evenement "+status);
         	  });
-        	
-        
         	
         $scope.submitData = function() {
 			
@@ -89,6 +100,32 @@
         	}
         	
         	$scope.participe = function()
+        	{
+        		if($scope.participe_evenement)
+        			{
+        				$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+            			$http({method: 'post', 
+            				url: 'http://localhost:8080/rest/ev/taketrajet/', 
+            				params:{'idPersonne' : $scope.param, 
+            					'idEvenement' : $scope.participe_evenement}
+            				}).success(function(data){
+                			alert("Votre demande a bien &eacute;t&eacute; pris en compte");
+                			window.location.href = "detail_personne.html?id="+$scope.param;
+                		})
+                		.error(function(data, status, headers, config) {
+                    	    alert("échec "+ status);
+                    	  });
+            			
+        			}
+        		else
+        			{
+        				alert("Veuillez choisir un evenement valide");
+        			}
+            	
+        	}
+        	
+        	//pour le commentaire 
+        	$scope.submit_commentaire = function()
         	{
         		if($scope.participe_evenement)
         			{
@@ -176,7 +213,7 @@
 	            		 <select name="menu_destination" ng-model="participe_evenement" >
 	            		 	  <option value=""></option>
 	            		 	  
-					          <option value="{{ev.id}}"  ng-repeat="ev in evenements" ng-value="ev.id">{{ev.id}}: {{ev.depart}} - {{ev.dest}} </option>
+					          <option value="{{ev.id}}"  ng-repeat="ev in evenements_not" ng-value="ev.id">{{ev.id}}: {{ev.depart}} - {{ev.dest}} </option>
 
 					     </select>
 	            		<button type="submit" ng-click="participe()">Participer</button>
@@ -190,6 +227,16 @@
 	           	 		<p>Ici vous pouvez r&eacute;diger des commentaires pour un des evenements ou vous
 	           	 		avez particip&eacute;. </br>
 	            		
+	            		<form>
+	            			<p>Veuillez choisir l'evenement </p>
+	            			<select name="comment_ev" ng-model="commentaire_id_ev" >
+	            		 	  <option value=""></option>
+	            		 	  <option value="{{ev.id}}"  ng-repeat="ev in evenements" ng-value="ev.id">{{ev.id}}: {{ev.depart}} - {{ev.dest}} </option>
+					    	</select>
+	            			Votre message:<br>
+							<input type="text" name="dest" ng-model="commentaire_value" required>
+							<button type="submit"  ng-click="submit_commentaire()">Envoi Commentaire</button> 
+	            		</form>
 	            		</p>
 	            	</div>
 	           	 	</form>
