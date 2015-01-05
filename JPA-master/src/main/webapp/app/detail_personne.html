@@ -54,18 +54,26 @@
         	  });
         	
         $scope.submitData = function() {
-			
-			$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-			$http({method: 'post', 
-				url: 'http://localhost:8080/rest/ev/propose/', 
-				params:{'id' : $scope.myElementForm.id, 'depart' : $scope.myElementForm.depart, 'dest': $scope.myElementForm.destination}
-				}).success(function(data){
-    			alert("Evenement cr&eacute;e");
-    			window.location.href = "index.html";
-    		})
-    		.error(function(data, status, headers, config) {
-        	    alert("echec "+ status);
-        	  });
+			if($scope.myElementForm.depart && $scope.myElementForm.destination)
+				{
+				$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+				$http({method: 'post', 
+					url: 'http://localhost:8080/rest/ev/propose/', 
+					params:{'id' : $scope.myElementForm.id, 
+						'depart' : $scope.myElementForm.depart, 
+						'dest': $scope.myElementForm.destination}
+					}).success(function(data){
+	    			alert("Evenement cr&eacute;e");
+	    			window.location.href = "index.html";
+	    		})
+	    		.error(function(data, status, headers, config) {
+	        	    alert("echec "+ status);
+	        	  });
+				}
+			else
+				{
+					alert('Veuillez compl\351 champs d\351part et destination svp');
+				}
     		
 			
         	}
@@ -75,6 +83,7 @@
             	$scope.showModifNom = !$scope.showModifNom;
         	}
         	
+        	//pour changer le nom de la personne
         	$scope.submitModifNom = function()
         	{
         		if($scope.nouveau_nom.id && $scope.nouveau_nom.nom) 
@@ -89,7 +98,7 @@
             			window.location.href = "detail_personne.html?id="+$scope.param;
             		})
             		.error(function(data, status, headers, config) {
-                	    alert("échec "+ status);
+                	    alert("\351chec "+ status);
                 	  });
         			}
         		else
@@ -99,6 +108,7 @@
         		
         	}
         	
+        	//pour la participation à un evenement
         	$scope.participe = function()
         	{
         		if($scope.participe_evenement)
@@ -113,7 +123,7 @@
                 			window.location.href = "detail_personne.html?id="+$scope.param;
                 		})
                 		.error(function(data, status, headers, config) {
-                    	    alert("échec "+ status);
+                    	    alert("\351chec "+ status);
                     	  });
             			
         			}
