@@ -128,12 +128,15 @@ public class EvenementResource implements MyService {
 		return result;
 	}
 
-	
-	public void redigeCom(long idPersone,long idEven, String ch) {
-		Query query_p=manager.createQuery("SELECT p FROM PERSONNE AS p WHERE ID=idPersonne");
+	@POST
+	@Path("taketrajet/")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public void redigeCom(@QueryParam("idPersonne")long idPersone,@QueryParam("idEven")long idEven,@QueryParam("idEven") String ch) {
+		Query query_p=manager.createQuery("SELECT p FROM Personne AS p WHERE ID=idPersonne");
 		List personnes=query_p.getResultList();	
 		Personne personne = (Personne) personnes.get(0);
-		Query query_e=manager.createQuery("SELECT evens FROM EVENEMENT AS evens WHERE ID=idEven");
+		Query query_e=manager.createQuery("SELECT evens FROM Evenement AS evens WHERE ID= :idEven");
+		query.setParameter("idEven", idEven);
 		Evenement ev=(Evenement) query_e.getResultList().get(0);
 		manager.persist(personne.redigeCom(ev, ch));
 		
