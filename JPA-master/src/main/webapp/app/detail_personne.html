@@ -85,7 +85,7 @@
         				params:{'id' : $scope.nouveau_nom.id, 
         					'nom' : $scope.nouveau_nom.nom}
         				}).success(function(data){
-            			alert("Votre demande a bien &eacute;t&eacute; pris en compte");
+            			alert("Votre demande a bien \351t\351 pris en compte");
             			window.location.href = "detail_personne.html?id="+$scope.param;
             		})
             		.error(function(data, status, headers, config) {
@@ -94,7 +94,7 @@
         			}
         		else
         			{
-        				alert('Echec de la modification du nom, v&eacute;rifier le champs à compl&eacute;ter');
+        				alert('Echec de la modification du nom, v\351rifier le champs \340 compl\351ter');
         			}
         		
         	}
@@ -109,7 +109,7 @@
             				params:{'idPersonne' : $scope.param, 
             					'idEvenement' : $scope.participe_evenement}
             				}).success(function(data){
-                			alert("Votre demande a bien &eacute;t&eacute; pris en compte");
+                			alert("Votre demande a bien \351t\351 pris en compte");
                 			window.location.href = "detail_personne.html?id="+$scope.param;
                 		})
                 		.error(function(data, status, headers, config) {
@@ -119,7 +119,7 @@
         			}
         		else
         			{
-        				alert("Veuillez choisir un evenement valide");
+        				alert("Veuillez choisir un \351venement valide");
         			}
             	
         	}
@@ -136,17 +136,17 @@
             					'idEven' : $scope.commentaire_id_ev,
             					'value': $scope.commentaire_value}
             				}).success(function(data){
-                			alert("Votre demande a bien été pris en compte");
+                			alert("Votre demande a bien \351t\351 pris en compte");
                 			window.location.href = "detail_personne.html?id="+$scope.param;
                 		})
                 		.error(function(data, status, headers, config) {
-                    	    alert("échec "+ status);
+                    	    alert("\351chec "+ status);
                     	  });
             			
         			}
         		else
         			{
-        				alert("Veuillez choisir un evenement valide pour envoyer votre commentaire");
+        				alert("Veuillez choisir un \351venement valide pour envoyer votre commentaire");
         			}
             	
         	}
