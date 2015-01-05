@@ -11,6 +11,8 @@ public interface MyService {
 	
 	//EVENEMENT
 	
+	public List<Evenement> findEvenement(String depart,String dest);//OK - mais pas utilisé dans AnularJS
+	
 	public Evenement proposeTrajet(String id,String depart,String dest);//OK
 	
 	public abstract List<Evenement> listev(); //OK
@@ -23,7 +25,7 @@ public interface MyService {
 	
 	//COMMENTAIRE
 	
-	public abstract void redigeCom(long idPersone,long idEven, String ch);
+	public abstract void redigeCom(String idPersone,String idEven, String ch);
 	
 	public abstract List<Commentaire> getAllComFromEv(String idEven);//OK
 	

@@ -127,15 +127,16 @@
         	//pour le commentaire 
         	$scope.submit_commentaire = function()
         	{
-        		if($scope.participe_evenement)
+        		if($scope.commentaire_id_ev)
         			{
         				$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
             			$http({method: 'post', 
-            				url: 'http://localhost:8080/rest/ev/taketrajet/', 
+            				url: 'http://localhost:8080/rest/ev/redige_com/', 
             				params:{'idPersonne' : $scope.param, 
-            					'idEvenement' : $scope.participe_evenement}
+            					'idEven' : $scope.commentaire_id_ev,
+            					'value': $scope.commentaire_value}
             				}).success(function(data){
-                			alert("Votre demande a bien &eacute;t&eacute; pris en compte");
+                			alert("Votre demande a bien été pris en compte");
                 			window.location.href = "detail_personne.html?id="+$scope.param;
                 		})
                 		.error(function(data, status, headers, config) {
@@ -145,7 +146,7 @@
         			}
         		else
         			{
-        				alert("Veuillez choisir un evenement valide");
+        				alert("Veuillez choisir un evenement valide pour envoyer votre commentaire");
         			}
             	
         	}

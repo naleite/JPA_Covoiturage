@@ -129,17 +129,24 @@ public class EvenementResource implements MyService {
 	}
 
 	@POST
-	@Path("taketrajet/")
+	@Path("redige_com/")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public void redigeCom(@QueryParam("idPersonne")long idPersone,@QueryParam("idEven")long idEven,@QueryParam("idEven") String ch) {
-		Query query_p=manager.createQuery("SELECT p FROM Personne AS p WHERE ID=idPersonne");
-		List personnes=query_p.getResultList();	
+	public void redigeCom(@QueryParam("idPersonne")String idPersonne,@QueryParam("idEven")String idEven,@QueryParam("value") String ch) {
+		EntityTransaction t = manager.getTransaction();
+		t.begin();
+		
+		Query query =manager.createQuery("SELECT p FROM Personne AS p WHERE ID=:id");
+		query.setParameter("id", Long.parseLong(idPersonne));
+		List personnes=query.getResultList();	
 		Personne personne = (Personne) personnes.get(0);
-		Query query_e=manager.createQuery("SELECT evens FROM Evenement AS evens WHERE ID= :idEven");
-		query.setParameter("idEven", idEven);
-		Evenement ev=(Evenement) query_e.getResultList().get(0);
+		
+		Query query2=manager.createQuery("SELECT evens FROM Evenement AS evens WHERE ID= :idEven");
+		query2.setParameter("idEven", Long.parseLong(idEven));
+		Evenement ev=(Evenement) query2.getResultList().get(0);
+		
 		manager.persist(personne.redigeCom(ev, ch));
 		
+		t.commit();
 	}
 	
 	@POST
@@ -162,7 +169,16 @@ public class EvenementResource implements MyService {
 	public List<Evenement> getEvPersonne(@PathParam("id") String idPersonne)
 	{
 		Personne p =manager.find(Personne.class,Long.parseLong(idPersonne));
-		return p.getListEvent();
+		List<Evenement> l = new ArrayList<Evenement>();
+		for(Evenement e: p.getListEvent())
+		{
+			l.add(e);
+		}
+		for(Evenement e: p.getListEvCond())
+		{
+			l.add(e);
+		}
+		return l;
 	}
 	
 	@GET
