@@ -92,7 +92,6 @@
         	{
         		if($scope.participe_evenement)
         			{
-        				alert("alte "+$scope.participe_evenement);
         				$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
             			$http({method: 'post', 
             				url: 'http://localhost:8080/rest/ev/taketrajet/', 
