@@ -32,7 +32,7 @@
         	  });
         	
         	//pour récupérer la liste des evenements
-        	$http({method: 'GET', url:'http://localhost:8080/rest/ev'})
+        	$http({method: 'GET', url:'http://localhost:8080/rest/ev/evenements_not_personne/'+$scope.param})
         	.success(function(data){
         			$scope.evenements = data;
         	})
@@ -169,8 +169,8 @@
 	           	 	
 	           	 	<form id="zoneTakeTrajet" >
 	           	 	<div>
-	           	 		<h3>Participer à un evenement</h3>
-	           	 		<p>Ici vous pouvez participer à des evenements, vue sur la page montrant la
+	           	 		<h3>Participer &agrave; un evenement</h3>
+	           	 		<p>Ici vous pouvez participer &agrave; des evenements, vue sur la page montrant la
 	           	 			<a href="index.html">liste des evenements</a>
 	            		</p>
 	            		 <select name="menu_destination" ng-model="participe_evenement" >
@@ -188,7 +188,7 @@
 	           	 	<div>
 	           	 		<h3>Creation de Commentaire</h3>
 	           	 		<p>Ici vous pouvez r&eacute;diger des commentaires pour un des evenements ou vous
-	           	 		avez participé. </br>
+	           	 		avez particip&eacute;. </br>
 	            		
 	            		</p>
 	            	</div>

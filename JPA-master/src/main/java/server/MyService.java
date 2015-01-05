@@ -17,6 +17,10 @@ public interface MyService {
 	
 	public abstract Evenement getEvById(String idE); //OK
 	
+	public abstract List<Evenement> getEvPersonne(String idP);
+	
+	public abstract List<Evenement> getEvNotParticipatePersonne(String idP);
+	
 	//COMMENTAIRE
 	
 	public abstract void redigeCom(long idPersone,long idEven, String ch);

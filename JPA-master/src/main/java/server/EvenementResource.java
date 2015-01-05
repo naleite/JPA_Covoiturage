@@ -1,6 +1,7 @@
 package server;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Iterator;
@@ -56,7 +57,7 @@ public class EvenementResource implements MyService {
 			
 			
 			Voiture v=new Voiture();
-			v.setNbPlaceTotal(3);
+			v.setNbPlaceTotal(10);
 			v.setSeries("Benz");
 			manager.persist(v);
 			Personne c=new Personne();
@@ -150,6 +151,48 @@ public class EvenementResource implements MyService {
 		ev.addParticipant(p);
 		
 		t.commit();
+	}
+	
+	@GET
+	@Path("evenements_personne/{id}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Evenement> getEvPersonne(@PathParam("id") String idPersonne)
+	{
+		Personne p =manager.find(Personne.class,Long.parseLong(idPersonne));
+		return p.getListEvent();
+	}
+	
+	@GET
+	@Path("evenements_not_personne/{id}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Evenement> getEvNotParticipatePersonne(@PathParam("id") String id)
+	{
+		//return la liste des evenements ou la personne ne participe pas.
+		Query query = manager.createQuery("SELECT evens FROM Evenement AS evens");
+		List<Evenement> ch=query.getResultList(); //liste de tous les evenements.
+		try
+		{
+			Personne p = manager.find(Personne.class,Long.parseLong(id));
+			
+			List<Evenement> l = p.getListEvent();
+
+			List<Evenement> res = new ArrayList<Evenement>();
+			
+			for(Evenement e: ch)
+			{
+				if(!l.contains(e) && !p.getListEvCond().contains(e))
+				{
+					res.add(e);
+				}
+			}
+			return res;
+		}
+		catch(Exception e)
+		{
+			System.out.println("EXCEPTION Long.parseLong(id) ");
+			return null;
+		}
+		
 	}
 	
 	@Override
