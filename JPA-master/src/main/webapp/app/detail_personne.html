@@ -35,8 +35,8 @@
         	    alert("echec "+status);
         	  });
         	
-        	//pour récupérer la liste des evenements ou la personne ne participe pas.
-        	$http({method: 'GET', url:'http://localhost:8080/rest/ev/evenements_not_personne/'+$scope.param})
+        	//pour récupérer la liste des evenements ou la personne ne participe pas et qui soit pas full.
+        	$http({method: 'GET', url:'http://localhost:8080/rest/ev/evenements_not_personne_dispo/'+$scope.param})
         	.success(function(data){
         			$scope.evenements_not = data;
         	})

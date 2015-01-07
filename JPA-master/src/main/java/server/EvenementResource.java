@@ -235,6 +235,23 @@ public class EvenementResource implements MyService {
 		
 	}
 	
+	@GET
+	@Path("evenements_not_personne_dispo/{id}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public List<Evenement> getEvNotParticipatePersonneAndDispo(@PathParam("id") String id)
+	{
+		List<Evenement> liste_ev = getEvNotParticipatePersonne(id);
+		List<Evenement> l2 = new ArrayList<Evenement>();
+		for(Evenement e: liste_ev)
+		{
+			if(e.getNbPersonRest()>0)
+			{
+				l2.add(e);
+			}
+		}
+		return l2;
+	}
+	
 	@Override
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })

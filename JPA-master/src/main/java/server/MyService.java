@@ -23,6 +23,8 @@ public interface MyService {
 	
 	public abstract List<Evenement> getEvNotParticipatePersonne(String idP);
 	
+	public List<Evenement> getEvNotParticipatePersonneAndDispo(String id);
+	
 	//COMMENTAIRE
 	
 	public abstract void redigeCom(String idPersone,String idEven, String ch);
