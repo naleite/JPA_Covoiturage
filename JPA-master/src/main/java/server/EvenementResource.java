@@ -337,6 +337,7 @@ public class EvenementResource implements MyService {
 			{
 				//suppression de la participation d'un participant à l'evenement
 				p1.getListEvCond().remove(e);
+				p1.getListEvent().remove(e);
 				System.out.println("remove participant: "+p1.getId());
 				//e.getParticipants().remove(p1);
 				//suppression des commentaires 
