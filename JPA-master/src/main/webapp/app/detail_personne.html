@@ -115,12 +115,19 @@
         			{
         				$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
             			$http({method: 'post', 
-            				url: 'http://localhost:8080/rest/ev/taketrajet/', 
+            				url: 'http://localhost:8080/rest/ev/taketrajetBool/', 
             				params:{'idPersonne' : $scope.param, 
             					'idEvenement' : $scope.participe_evenement}
             				}).success(function(data){
-                			alert("Votre demande a bien \351t\351 pris en compte");
-                			window.location.href = "detail_personne.html?id="+$scope.param;
+            					if(data==true)
+            						{
+            							alert(data +"Votre demande a bien \351t\351 pris en compte, vous participer à l'\351venement");
+                        				window.location.href = "detail_personne.html?id="+$scope.param;
+            						}
+            					else
+            						{
+            							alert("Plus de place pour cette evenement, désolé");
+            						}
                 		})
                 		.error(function(data, status, headers, config) {
                     	    alert("\351chec "+ status);

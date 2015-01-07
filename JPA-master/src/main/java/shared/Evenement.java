@@ -119,6 +119,23 @@ public void addParticipant(Personne p){
 	}
 }
 
+/**
+ * pour Play Framework
+ * @param p ajoute p à l'évenement
+ */
+public Boolean addParticipantBool(Personne p){
+	if (!participants.contains(p) && getNbPersonRest()>0){
+		this.participants.add(p);
+		p.getListEvent().add(this);//ajoute l'evenement au participant
+		this.nbPersonRest--;
+		System.out.println("One person added in this trip!");
+		return true;
+	}
+	else {
+		System.err.println("Can not add!");
+		return false;
+	}
+}
 
 
 @ManyToMany

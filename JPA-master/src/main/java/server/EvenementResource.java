@@ -163,6 +163,27 @@ public class EvenementResource implements MyService {
 		t.commit();
 	}
 	
+	@POST
+	@Path("taketrajetBool/")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Boolean takeTrajetBool(@QueryParam("idPersonne")String idPersonne, @QueryParam("idEvenement")String idEven)
+	{
+		EntityTransaction t = manager.getTransaction();
+		t.begin();
+		boolean res = false;
+		try {
+			Personne p =manager.find(Personne.class,Long.parseLong(idPersonne));
+			Evenement ev = manager.find(Evenement.class,Long.parseLong(idEven));
+			res = ev.addParticipantBool(p);
+        }
+        catch (Exception e){}
+        finally {
+            t.commit();
+        }
+		return res;
+		
+	}
+	
 	@GET
 	@Path("evenements_personne/{id}")
 	@Produces({ MediaType.APPLICATION_JSON })
