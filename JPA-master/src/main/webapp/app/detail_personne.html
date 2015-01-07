@@ -119,14 +119,14 @@
             				params:{'idPersonne' : $scope.param, 
             					'idEvenement' : $scope.participe_evenement}
             				}).success(function(data){
-            					if(data==true)
+            					if(data=="true")
             						{
-            							alert(data +"Votre demande a bien \351t\351 pris en compte, vous participer à l'\351venement");
+            							alert(data +" Votre demande a bien \351t\351 pris en compte, vous participer à l'\351venement");
                         				window.location.href = "detail_personne.html?id="+$scope.param;
             						}
             					else
             						{
-            							alert("Plus de place pour cette evenement, désolé");
+            							alert(data +" Plus de place pour cette evenement, désolé");
             						}
                 		})
                 		.error(function(data, status, headers, config) {
