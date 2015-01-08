@@ -95,7 +95,11 @@ public class EvenementResource implements MyService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		t.commit();
+		finally
+		{
+			t.commit();
+		}
+		
 		
 	}
 
@@ -131,22 +135,30 @@ public class EvenementResource implements MyService {
 	@POST
 	@Path("redige_com/")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public void redigeCom(@QueryParam("idPersonne")String idPersonne,@QueryParam("idEven")String idEven,@QueryParam("value") String ch) {
+	public String redigeCom(@QueryParam("idPersonne")String idPersonne,@QueryParam("idEven")String idEven,@QueryParam("value") String ch) {
 		EntityTransaction t = manager.getTransaction();
 		t.begin();
+		String res = "nok";
+		try
+		{
+			Query query =manager.createQuery("SELECT p FROM Personne AS p WHERE ID=:id");
+			query.setParameter("id", Long.parseLong(idPersonne));
+			List personnes=query.getResultList();	
+			Personne personne = (Personne) personnes.get(0);
+			
+			Query query2=manager.createQuery("SELECT evens FROM Evenement AS evens WHERE ID= :idEven");
+			query2.setParameter("idEven", Long.parseLong(idEven));
+			Evenement ev=(Evenement) query2.getResultList().get(0);
+			
+			manager.persist(personne.redigeCom(ev, ch));
+			res = "ok";
+		}
+		catch(Exception e){System.out.println("echec: "+e);}
+		finally{
+			t.commit();
+		}
+		return res;
 		
-		Query query =manager.createQuery("SELECT p FROM Personne AS p WHERE ID=:id");
-		query.setParameter("id", Long.parseLong(idPersonne));
-		List personnes=query.getResultList();	
-		Personne personne = (Personne) personnes.get(0);
-		
-		Query query2=manager.createQuery("SELECT evens FROM Evenement AS evens WHERE ID= :idEven");
-		query2.setParameter("idEven", Long.parseLong(idEven));
-		Evenement ev=(Evenement) query2.getResultList().get(0);
-		
-		manager.persist(personne.redigeCom(ev, ch));
-		
-		t.commit();
 	}
 	
 	@POST
@@ -210,13 +222,13 @@ public class EvenementResource implements MyService {
 		//return la liste des evenements ou la personne ne participe pas.
 		Query query = manager.createQuery("SELECT evens FROM Evenement AS evens");
 		List<Evenement> ch=query.getResultList(); //liste de tous les evenements.
+		List<Evenement> res= new ArrayList<Evenement>();
 		try
 		{
 			Personne p = manager.find(Personne.class,Long.parseLong(id));
 			
 			List<Evenement> l = p.getListEvent();
 
-			List<Evenement> res = new ArrayList<Evenement>();
 			
 			for(Evenement e: ch)
 			{
@@ -225,14 +237,13 @@ public class EvenementResource implements MyService {
 					res.add(e);
 				}
 			}
-			return res;
 		}
 		catch(Exception e)
 		{
 			System.out.println("EXCEPTION Long.parseLong(id) ");
-			return null;
+			res = null;
 		}
-		
+		return res;
 	}
 	
 	@GET
@@ -274,24 +285,35 @@ public class EvenementResource implements MyService {
 	}
 	
 	@DELETE
-	@Path("delete/{id}")
-	public void deleteByEvId(@PathParam("id") String arg0) {
+	@Path("delete_evenement/{id}")
+	public String deleteByEvId(@PathParam("id") String arg0) {
 		EntityTransaction t = manager.getTransaction();
 		t.begin();
-		Evenement e = manager.find(Evenement.class,Long.parseLong(arg0));
+		String res = "nok";
+		try
+		{
+			Evenement e = manager.find(Evenement.class,Long.parseLong(arg0));
+			
+			e.getConducteur().getListEvCond().remove(e);
+			for(Personne p: e.getParticipants())
+			{
+				p.getListEvent().remove(e);
+			}
+			for(Commentaire c: e.getListComEv())
+			{
+				c.getPersonne().getListCom().remove(c);
+				manager.remove(c);
+			}
+			manager.remove(e);
+			res = "ok";
+		}
+		catch(Exception e){System.out.println("echec "+ e);}
+		finally
+		{
+			t.commit();
+		}
+		return res;
 		
-		e.getConducteur().getListEvCond().remove(e);
-		for(Personne p: e.getParticipants())
-		{
-			p.getListEvent().remove(e);
-		}
-		for(Commentaire c: e.getListComEv())
-		{
-			c.getPersonne().getListCom().remove(c);
-			manager.remove(c);
-		}
-		manager.remove(e);
-		t.commit();
 	}
 	
 	@GET
@@ -305,78 +327,89 @@ public class EvenementResource implements MyService {
 	
 	@DELETE
 	@Path("delete/personne/{id}")
-	public void deleteById(@PathParam("id") String arg0) {
+	public String deleteById(@PathParam("id") String arg0) {
 		
 		EntityTransaction t = manager.getTransaction();
 		t.begin();
-		Personne p = manager.find(Personne.class,Long.parseLong(arg0));
-		System.out.println("**********************************************");
-		System.out.println("personne to delete ="+p.getNom());
-		
-		//retire la personne dans les evenements ou il a participé.
-		for (Evenement e : p.getListEvent())
+		String res = "nok";
+		try
 		{
-			e.getParticipants().remove(p);
-			System.out.println("remove ev_id: "+e.getId());
-		}
-		System.out.println("deleting commentaire c......");
-		for(Commentaire c: p.getListCom())
-		{
-			c.getEvenement().getListComEv().remove(c);
-			System.out.println("remove com_id: "+c.getId()+" value = "+c.getValue());
-			manager.remove(c);
-		}
-		
-		//supprime les evenements ou la personne est conducteur
-		System.out.println("deleting event from driver");
-		
-		for (Evenement e : p.getListEvCond())
-		{
-			System.out.println("**deleting personne from event");
-			for(Personne p1: e.getParticipants())
+			Personne p = manager.find(Personne.class,Long.parseLong(arg0));
+			System.out.println("**********************************************");
+			System.out.println("personne to delete ="+p.getNom());
+			
+			//retire la personne dans les evenements ou il a participé.
+			for (Evenement e : p.getListEvent())
 			{
-				//suppression de la participation d'un participant à l'evenement
-				p1.getListEvCond().remove(e);
-				p1.getListEvent().remove(e);
-				System.out.println("remove participant: "+p1.getId());
-				//e.getParticipants().remove(p1);
-				//suppression des commentaires 
-				Iterator listCom = p1.getListCom().iterator();
-				while(listCom.hasNext() )
+				e.getParticipants().remove(p);
+				System.out.println("remove ev_id: "+e.getId());
+			}
+			System.out.println("deleting commentaire c......");
+			for(Commentaire c: p.getListCom())
+			{
+				c.getEvenement().getListComEv().remove(c);
+				System.out.println("remove com_id: "+c.getId()+" value = "+c.getValue());
+				manager.remove(c);
+			}
+			
+			//supprime les evenements ou la personne est conducteur
+			System.out.println("deleting event from driver");
+			
+			for (Evenement e : p.getListEvCond())
+			{
+				System.out.println("**deleting personne from event");
+				for(Personne p1: e.getParticipants())
 				{
-					Commentaire c = (Commentaire) listCom.next();
-					if(c.getEvenement() == e)
+					//suppression de la participation d'un participant à l'evenement
+					p1.getListEvCond().remove(e);
+					p1.getListEvent().remove(e);
+					System.out.println("remove participant: "+p1.getId());
+					//e.getParticipants().remove(p1);
+					//suppression des commentaires 
+					Iterator listCom = p1.getListCom().iterator();
+					while(listCom.hasNext() )
 					{
-						System.out.println("commentaire trouvé");
-						//c.getEvenement().getistComEv().remove(c);
-						listCom.remove();//retire le commentaire courant de la liste de com
-						//p1.getListCom().remove(c);
-						manager.remove(c);
+						Commentaire c = (Commentaire) listCom.next();
+						if(c.getEvenement() == e)
+						{
+							System.out.println("commentaire trouvé");
+							//c.getEvenement().getistComEv().remove(c);
+							listCom.remove();//retire le commentaire courant de la liste de com
+							//p1.getListCom().remove(c);
+							manager.remove(c);
+						}
 					}
 				}
+				System.out.println("**deleting commentaire from event");
+				Iterator<Commentaire> iterListComEv = e.getListComEv().iterator();
+				while(iterListComEv.hasNext())
+				{
+					Commentaire c  = iterListComEv.next();
+					c.getPersonne().getListCom().remove(c);
+					
+					iterListComEv.remove();
+					manager.remove(c);
+					
+				}
+				manager.remove(e);//supprime l'evenement si la personne est conducteur
 			}
-			System.out.println("**deleting commentaire from event");
-			Iterator<Commentaire> iterListComEv = e.getListComEv().iterator();
-			while(iterListComEv.hasNext())
-			{
-				Commentaire c  = iterListComEv.next();
-				c.getPersonne().getListCom().remove(c);
-				
-				iterListComEv.remove();
-				manager.remove(c);
-				
-			}
-			manager.remove(e);//supprime l'evenement si la personne est conducteur
-		}
-	
-		if(p.getVoiture() != null)
-		{
-			manager.remove(p.getVoiture());
-		}
 		
-		manager.remove(p);
-		System.out.println("*******finish deleteById");
-		t.commit();
+			if(p.getVoiture() != null)
+			{
+				manager.remove(p.getVoiture());
+			}
+			
+			manager.remove(p);
+			System.out.println("*******finish deleteById");
+			res = "ok";
+		}
+		catch(Exception e){
+			System.out.println("echec "+e.toString());
+		}finally{
+			t.commit();
+		}
+		return res;
+		
 	}
 	
 	@GET

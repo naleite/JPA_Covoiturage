@@ -53,7 +53,7 @@
     					'nbplace' : $scope.myElementForm.nbplace,
     					}
     				}).success(function(data){
-        			alert("Personne cr&eacute;e avec succès");
+        			alert("Personne cr\351e avec succ\350s");
         			window.location.href = "list_personne.html";
         		})
         		.error(function(data, status, headers, config) {
@@ -84,6 +84,8 @@
     		<li>MENU</li>
     		<li> <a href="list_personne.html" >go to List Personne</a></li>
     		 <li><a href="index.html" >go to list evenement</a></li>
+    		<li><a href="create_personne.html" >go to create personne</a></li>
+  
     	</ul>
     </nav>
     <body >

@@ -15,10 +15,24 @@
         
         $scope.delEv = function(idEv) {
     		
-    		$http({method: 'DELETE', url: 'http://localhost:8080/rest/ev/delete/'+idEv}).success(function(data){
+    		$http({method: 'DELETE', url: 'http://localhost:8080/rest/ev/delete_evenement/'+idEv}).success(function(data){
     			alert("Suppression r\351ussite_evenemnt no: "+idEv);
     			window.location.href = "index.html";
-    		});
+    			}).success(function(data){
+    			if(data=="ok")
+    				{
+    					alert("Evenement supprim\351e avec succ\350s: Evenement.no: "+idEv);
+        				window.location.href = "list_personne.html";
+    				}
+    			else
+    				{
+    					alert("echec de la requete. Veuillez r\351essayer ult\351rieurement.");
+    				}
+    			
+    		}).
+    		  error(function(data, status, headers, config) {
+    			  alert("ECHEC: "+idEv);
+    			  });
     		}
         
         $scope.gotoev = function(idP) {
@@ -38,8 +52,9 @@
     </head>
     <nav>
     	<ul>
-    		<li>MENU</li>
+    	<li>MENU</li>
     		<li> <a href="list_personne.html" >go to List Personne</a></li>
+    		<li><a href="index.html" >go to list evenement</a></li>
     		<li><a href="create_personne.html" >go to create personne</a></li>
     	</ul>
     </nav>

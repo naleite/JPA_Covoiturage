@@ -27,7 +27,7 @@ public interface MyService {
 	
 	//COMMENTAIRE
 	
-	public abstract void redigeCom(String idPersone,String idEven, String ch);
+	public abstract String redigeCom(String idPersone,String idEven, String ch);
 	
 	public abstract List<Commentaire> getAllComFromEv(String idEven);//OK
 	
@@ -35,9 +35,9 @@ public interface MyService {
 	
 	public abstract void takeTrajet(String idPersonne, String idEvenement);//OK
 
-	public abstract void deleteById(String arg0);//ok
+	public abstract String deleteById(String arg0);//ok
 	
-	public abstract void deleteByEvId(String arg0);//OK
+	public abstract String deleteByEvId(String arg0);//OK
 	
 	public abstract Personne changeNom(String id, String nom);//Ok
 	

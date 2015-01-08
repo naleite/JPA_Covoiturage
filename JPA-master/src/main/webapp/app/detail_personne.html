@@ -121,7 +121,7 @@
             				}).success(function(data){
             					if(data=="true")
             						{
-            							alert(data +" Votre demande a bien \351t\351 pris en compte, vous participer à l'\351venement");
+            							alert(" Votre demande a bien \351t\351 pris en compte, vous participer à l'\351venement!");
                         				window.location.href = "detail_personne.html?id="+$scope.param;
             						}
             					else
@@ -146,20 +146,37 @@
         	{
         		if($scope.commentaire_id_ev)
         			{
-        				$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-            			$http({method: 'post', 
-            				url: 'http://localhost:8080/rest/ev/redige_com/', 
-            				params:{'idPersonne' : $scope.param, 
-            					'idEven' : $scope.commentaire_id_ev,
-            					'value': $scope.commentaire_value}
-            				}).success(function(data){
-                			alert("Votre demande a bien \351t\351 pris en compte");
-                			window.location.href = "detail_personne.html?id="+$scope.param;
-                		})
-                		.error(function(data, status, headers, config) {
-                    	    alert("\351chec "+ status);
-                    	  });
-            			
+        				if($scope.commentaire_value)
+        					{
+        					$http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+                			$http({method: 'post', 
+                				url: 'http://localhost:8080/rest/ev/redige_com/', 
+                				params:{'idPersonne' : $scope.param, 
+                					'idEven' : $scope.commentaire_id_ev,
+                					'value': $scope.commentaire_value}
+                				})
+                				.success(function(data){
+                					if(data=="ok")
+                						{
+                							alert("Votre demande a bien \351t\351 pris en compte");
+                            				window.location.href = "detail_personne.html?id="+$scope.param;
+                						}
+                					else
+                						{
+                							alert("echec de l'ajout de commentaire. Veuillez r\351essayer ult\351rieurement");
+                						}
+                    			
+                    		})
+                    		.error(function(data, status, headers, config) {
+                        	    alert("\351chec "+ status);
+                        	  });
+        					}
+        				else
+        					{
+        						alert("Le commentaire que vous voulez poster ne doit pas etre vide");
+        					}
+        				
+
         			}
         		else
         			{
