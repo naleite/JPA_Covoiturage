@@ -22,6 +22,10 @@
         	.error(function(data, status, headers, config) {
         	    alert("echec "+status);
         	  });
+        	
+        	 $scope.gotopersonne = function(idP) {
+             	window.location.href = "detail_personne.html?id="+idP;
+             	}
         }
         </script>
         <style>
@@ -51,7 +55,7 @@
           		<p>Nom Conducteur :{{curevent.conducteur.nom}}</p>
           		<p>Les participants :
           		<span ng-repeat="participant in curevent.participants">
-          			{{participant.nom}} .
+          			<a href ="" ng-click="gotopersonne(participant.id)">{{participant.nom}}</a> .
           		</span></p>
           		
           		<h3>Liste des Commentaires</h3>

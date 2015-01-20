@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import javax.swing.text.html.parser.Entity;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
@@ -19,15 +20,14 @@ import shared.*;
 public class EvenementResource implements MyService {
 	static int evaluate=0;
 	
-	EntityManager manager;
 	
 	public  EvenementResource() {
 		
-		manager = SingletonManager.getManager();
+		
 		
 		if(evaluate==0)
 		{
-			this.remplirBdd(manager);
+			this.remplirBdd(SingletonManager.getManager());
 			evaluate=1;
 		}
 		
@@ -111,11 +111,12 @@ public class EvenementResource implements MyService {
 		System.out.println("$*********************************");
 		System.out.println("id = "+id);
 		System.out.println("$*********************************");
+		EntityManager manager = SingletonManager.getManager();
 		manager.getTransaction().begin();
 		Personne p = manager.find(Personne.class,Long.parseLong(id));
         Evenement ev=p.proposeTrajet(depart, dest, new Date());
-		manager.persist(ev);
-		manager.getTransaction().commit();
+        manager.persist(ev);
+        manager.getTransaction().commit();
 		
 		
 		return ev;
@@ -125,6 +126,7 @@ public class EvenementResource implements MyService {
 	@Path("findev/{depart}/{dest}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Evenement> findEvenement(@PathParam("depart") String depart, @PathParam("dest")String dest) {
+		EntityManager manager = SingletonManager.getManager();
 		Query query=manager.createQuery("SELECT evens FROM Evenement evens WHERE DEPART=:dep AND DEST=:des")
 				.setParameter("dep",depart).setParameter("des",dest);
 		List result=query.getResultList();
@@ -136,6 +138,7 @@ public class EvenementResource implements MyService {
 	@Path("redige_com/")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public String redigeCom(@QueryParam("idPersonne")String idPersonne,@QueryParam("idEven")String idEven,@QueryParam("value") String ch) {
+		EntityManager manager = SingletonManager.getManager();
 		EntityTransaction t = manager.getTransaction();
 		t.begin();
 		String res = "nok";
@@ -166,6 +169,7 @@ public class EvenementResource implements MyService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public void takeTrajet(@QueryParam("idPersonne")String idPersonne, @QueryParam("idEvenement")String idEven)
 	{
+		EntityManager manager = SingletonManager.getManager();
 		EntityTransaction t = manager.getTransaction();
 		t.begin();
 		Personne p =manager.find(Personne.class,Long.parseLong(idPersonne));
@@ -180,6 +184,7 @@ public class EvenementResource implements MyService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Boolean takeTrajetBool(@QueryParam("idPersonne")String idPersonne, @QueryParam("idEvenement")String idEven)
 	{
+		EntityManager manager = SingletonManager.getManager();
 		EntityTransaction t = manager.getTransaction();
 		t.begin();
 		boolean res = false;
@@ -201,6 +206,7 @@ public class EvenementResource implements MyService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Evenement> getEvPersonne(@PathParam("id") String idPersonne)
 	{
+		EntityManager manager = SingletonManager.getManager();
 		Personne p =manager.find(Personne.class,Long.parseLong(idPersonne));
 		List<Evenement> l = new ArrayList<Evenement>();
 		for(Evenement e: p.getListEvent())
@@ -219,6 +225,7 @@ public class EvenementResource implements MyService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Evenement> getEvNotParticipatePersonne(@PathParam("id") String id)
 	{
+		EntityManager manager = SingletonManager.getManager();
 		//return la liste des evenements ou la personne ne participe pas.
 		Query query = manager.createQuery("SELECT evens FROM Evenement AS evens");
 		List<Evenement> ch=query.getResultList(); //liste de tous les evenements.
@@ -268,6 +275,7 @@ public class EvenementResource implements MyService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Evenement> listev()
 	{
+		EntityManager manager = SingletonManager.getManager();
 		Query query = manager.createQuery("SELECT evens FROM Evenement AS evens");
 		List<Evenement> ch=query.getResultList();
 		return ch;
@@ -278,6 +286,7 @@ public class EvenementResource implements MyService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Personne> getAllPersonne()
 	{
+		EntityManager manager = SingletonManager.getManager();
 		Query query = manager.createQuery("select e from Personne as e");
 		System.out.println("chargement des utilisateurs ....");
 		List<Personne> ch=query.getResultList();
@@ -287,6 +296,7 @@ public class EvenementResource implements MyService {
 	@DELETE
 	@Path("delete_evenement/{id}")
 	public String deleteByEvId(@PathParam("id") String arg0) {
+		EntityManager manager = SingletonManager.getManager();
 		EntityTransaction t = manager.getTransaction();
 		t.begin();
 		String res = "nok";
@@ -321,6 +331,7 @@ public class EvenementResource implements MyService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Evenement getEvById(@PathParam("id") String idE)
 	{
+		EntityManager manager = SingletonManager.getManager();
 		Evenement e = manager.find(Evenement.class,Long.parseLong(idE));
 		return e;
 	}
@@ -328,7 +339,8 @@ public class EvenementResource implements MyService {
 	@DELETE
 	@Path("delete/personne/{id}")
 	public String deleteById(@PathParam("id") String arg0) {
-		
+		System.out.println("bien appelé ");
+		EntityManager manager = SingletonManager.getManager();
 		EntityTransaction t = manager.getTransaction();
 		t.begin();
 		String res = "nok";
@@ -417,6 +429,7 @@ public class EvenementResource implements MyService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Personne getPersonne(@PathParam("id") String id)
 	{
+		EntityManager manager = SingletonManager.getManager();
 		Personne p = manager.find(Personne.class,Long.parseLong(id));
 		return p;
 	}
@@ -430,7 +443,7 @@ public class EvenementResource implements MyService {
 			@QueryParam("localisation") String local, 
 			@QueryParam("series") String series, 
 			@QueryParam("nbplace") String nbplace ) {
-		
+		EntityManager manager = SingletonManager.getManager();
 		EntityTransaction t = manager.getTransaction();
 		t.begin();
 		
@@ -468,6 +481,7 @@ public class EvenementResource implements MyService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Commentaire> getAllComFromEv(@PathParam("id") String id)
 	{
+		EntityManager manager = SingletonManager.getManager();
 		Evenement ev = manager.find(Evenement.class,Long.parseLong(id));
 		return ev.getListComEv();
 	}
@@ -477,6 +491,7 @@ public class EvenementResource implements MyService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Personne changeNom(@QueryParam("id")String id, @QueryParam("nom")String nom )
 	{
+		EntityManager manager = SingletonManager.getManager();
 		EntityTransaction t = manager.getTransaction();
 		t.begin();
 		Personne p=null;
