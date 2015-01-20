@@ -479,9 +479,19 @@ public class EvenementResource implements MyService {
 	{
 		EntityTransaction t = manager.getTransaction();
 		t.begin();
-		Personne p = manager.find(Personne.class,Long.parseLong(id));
-		p.setNom(nom);
-		t.commit();
+		Personne p=null;
+		try
+		{
+			p = manager.find(Personne.class,Long.parseLong(id));
+			p.setNom(nom);
+		}
+		catch(Exception e){
+			
+		}
+		finally
+		{
+			t.commit();
+		}
 		return p;
 	}
 
